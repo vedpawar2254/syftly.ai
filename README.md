@@ -1,12 +1,21 @@
 # syftly.ai
 
 <details>
-  <summary><b>Note I have documented the whole process in a blog type format in the "Documenting_the_whole_process" process</b></summary>
+  <summary><b>Process note</b></summary>
 
-* I start with defining the goals at start of the day
-* Then at the end I write all that i did and what i learned from it
-* And finally a short summary of progress till now
+I’m documenting this project day-by-day in a blog-style folder called `Documenting_the_whole_process`.
+
+For each day:
+
+* I start by writing down what I’m trying to figure out
+* I end by writing what I actually learned
+* I add a short progress summary
+
+This PRD is a *living snapshot*, not a final spec.
+
 </details>
+
+---
 
 # Product Requirements Document (PRD)
 
@@ -16,249 +25,304 @@
 
 **syftly.ai**
 
-### One‑line Description
+### One-line Description
 
-An AI agent–first news aggregation platform that continuously monitors global information sources, reasons over changes, and delivers decision‑oriented insights personalized to each user.
+A chat-first, signal-driven news system that helps users understand what’s actually going on, what changed, and why it matters — without drowning them in articles.
 
-### Problem Statement
+### The Problem (as I see it)
 
-Traditional news apps overwhelm users with repetitive headlines, shallow summaries, and low signal‑to‑noise ratios. Users must manually track changes, verify credibility, and infer relevance to their own goals.
+Most news apps optimize for publishing volume, not user understanding.
 
-### Solution
+What users get:
 
-SignalDesk acts as an autonomous news intelligence agent. It ingests news continuously, reasons over how stories evolve over time, resolves conflicts across sources, and surfaces only what meaningfully changed — explained in the context of the user’s goals.
+* Repeated headlines saying the same thing
+* Shallow summaries with no context
+* No clear sense of whether anything *actually changed*
 
-This is not a reader. It is a thinking layer on top of the news.
+What users end up doing:
 
----
+* Manually tracking stories in their head
+* Skimming dozens of articles
+* Still feeling unsure about the real state of things
 
-## 2. Target Users
+### The Core Idea
 
-### Primary User
+syftly is not an article reader.
 
-* Technically literate users (recruiters, founders, advanced students)
-* Interested in understanding *why* news matters, not just *what* happened
+It treats news as **evolving situations**, not isolated posts.
+The system continuously tracks how a story changes over time and surfaces only meaningful updates — grounded in real sources.
 
-### User Personas
-
-1. **Founder / Builder** – wants early signals and implications
-2. **Student / Researcher** – wants structured understanding and source comparison
-3. **Curious Power User** – wants fewer, smarter updates
-
----
-
-## 3. Core Value Proposition
-
-> “Tell me what actually changed, why it matters, and whether I should care.”
-
-The system prioritizes:
-
-* Change detection over repetition
-* Reasoned insight over summarization
-* Personal relevance over generic categories
+Think less “feed of headlines”, more “current understanding of the world”.
 
 ---
 
-## 5. Key Features
+## 2. Who This Is For
 
-### 5.1 Autonomous News Ingestion
+### Primary Users
 
-**Description**
+* Technically literate users
+* People who care about *understanding*, not just staying updated
 
-* Periodic ingestion of news from multiple sources
-* Sources include: RSS feeds, APIs, selected blogs, official statements
+Examples:
 
-**Capabilities**
+* Founders tracking industries or regulation
+* Students and researchers following complex topics
+* Power users tired of noisy feeds
 
-* Deduplication
-* Source metadata tracking (publisher, credibility class, recency)
-
-**Why it matters**
-Demonstrates scalable backend ingestion and preprocessing without LLM overuse.
+This is intentionally not built for casual scrolling.
 
 ---
 
-### 5.2 Change Detection Engine (Core Differentiator)
+## 3. Product Principles (Non-negotiables)
 
-**Description**
+These guide every decision:
 
-* The agent tracks stories over time as evolving entities
-* Detects meaningful changes rather than surface‑level rewrites
+1. **Change > Events**
+   If nothing meaningful changed, the app should stay quiet.
 
-**Examples**
+2. **Situations > Articles**
+   Articles are evidence, not the core unit.
+
+3. **Context by default**
+   Every update should explain where things stood before.
+
+4. **Show the sources**
+   Trust comes from transparency, not confident tone.
+
+5. **Cut noise aggressively**
+   Reading less is a feature.
+
+---
+
+## 4. Core Primitives (Mental Model)
+
+The system is built around these primitives, not UI features:
+
+### 1. Situation
+
+A real-world thing that unfolds over time.
+
+Examples:
+
+* “Venezuela election crisis”
+* “AI regulation in India”
+* “Company X facing investigation”
+
+This replaces vague categories like “World” or “Politics”.
+
+---
+
+### 2. State
+
+A snapshot of what we currently believe to be true about a situation.
+
+This answers:
+
+* “Where does this stand right now?”
+
+---
+
+### 3. Change
+
+An update that meaningfully modifies the state.
+
+Examples:
 
 * Rumor → confirmation
-* Policy proposal → approval
-* Tone shift across media outlets
+* Proposal → approval
+* Key actor entering or exiting
 
-**Implementation Signals**
-
-* Embeddings for story clustering
-* Temporal diffing of summaries
-* LLM reasoning over deltas, not raw articles
+Most articles do *not* produce a change.
 
 ---
 
-### 5.3 Multi‑Source Conflict Resolution
+### 4. Evidence
 
-**Description**
+Articles, statements, or documents that support or contradict a state or change.
 
-* Compare how different sources report the same event
-* Highlight disagreements, missing facts, and framing differences
-
-**Output**
-
-* Conflict summary
-* Confidence score
-* Explanation of divergence
-
-**Why it matters**
-Shows multi‑document reasoning and critical analysis, not passive aggregation.
+Evidence is always accessible, but never the main UI surface.
 
 ---
 
-### 5.4 Personalized Relevance Engine
+### 5. Perspective
 
-**Description**
+Different ways the same situation is framed across sources.
 
-* Personalization based on goals, reading behavior, and feedback
-* Moves beyond static categories
-
-**Signals Used**
-
-* Explicit preferences (topics, roles)
-* Implicit behavior (clicks, dwell time)
-* Feedback signals (“useful / not useful”)
-
-**Agent Question**
-
-> “Is this worth interrupting this user for?”
+This enables comparison without pretending there’s a single “objective” narrative.
 
 ---
 
-### 5.5 Ask‑the‑News Interface
+## 5. Core User Experiences
 
-**Description**
+### 5.1 Chat-First News Exploration
 
-* Conversational interface grounded in current and past news state
+Users can ask natural questions like:
 
-**Example Queries**
+* “What’s going on with Venezuela?”
+* “What changed since last week?”
+* “Is this actually serious?”
 
-* “What’s the real risk here?”
-* “What changed since yesterday?”
-* “Who benefits if this is true?”
+The system responds with:
 
-**Technical Focus**
+* Current state
+* Key changes over time
+* Links to supporting articles
 
-* Context assembly
-* Multi‑document retrieval
-* Conversation memory
-
----
-
-### 5.6 Insight‑First Feed UI
-
-**Description**
-
-* Feed prioritizes insights, not headlines
-
-**UI Elements**
-
-* ‘What changed’ markers
-* Confidence indicators
-* Source disagreement flags
-* ‘Why am I seeing this?’ explanations
-
-**Frontend Signals**
-
-* Streaming AI responses
-* Real‑time state updates
-* Clean information hierarchy
+Chat is the entry point, not a side feature.
 
 ---
 
-## 6. System Architecture (High Level)
+### 5.2 Situation Timelines
 
-### Backend Components
+Each situation has a timeline made of **changes**, not articles.
 
-* Ingestion Service (cron + async jobs)
-* Story Clustering & Embedding Store
-* Agent Reasoning Worker
-* User Memory Store
-* Notification & Feed Generator
+Users can:
 
-### AI Stack
+* See how the story evolved
+* Jump to the evidence behind each change
 
-* Embeddings for clustering and retrieval
-* LLM for:
-
-  * Delta reasoning
-  * Conflict explanation
-  * Personalized insight generation
-* Rule‑based logic where possible to control cost
+This replaces endless scrolling with structured understanding.
 
 ---
 
-## 7. Data & State Management
+### 5.3 Personalized Insight Feed
+
+The feed is situation-based, not article-based.
+
+It prioritizes:
+
+* Situations the user cares about
+* New meaningful changes
+
+If nothing changed, nothing shows up.
+
+---
+
+### 5.4 Multi-Source Comparison
+
+For any situation or change, users can:
+
+* Compare how different sources describe it
+* See framing differences and disagreements
+
+This is about surfacing perspective, not labeling bias.
+
+---
+
+### 5.5 One-Shot News
+
+Some news doesn’t evolve.
+
+The system supports:
+
+* Single-event situations
+* Quick summaries with attached evidence
+
+They don’t get forced into timelines.
+
+---
+
+## 6. System Architecture (Conceptual)
+
+### Core Backend Components
+
+* Ingestion Service (RSS / APIs / crawlers)
+* Situation Detection & Clustering
+* Change Detection Engine
+* Evidence Store
+* User Preference & Memory Store
+* Feed & Chat Orchestrator
+
+This is intentionally modular to keep reasoning isolated.
+
+---
+
+### AI Usage Philosophy
+
+LLMs are used for:
+
+* Reasoning over deltas
+* Explaining changes and conflicts
+* Natural language interaction
+
+They are *not* used for:
+
+* Blind summarization
+* Tasks better handled by rules or heuristics
+
+Cost and control matter.
+
+---
+
+## 7. State Management
 
 ### Persistent State
 
-* Story evolution timelines
-* User preference vectors
-* Feedback signals
+* Situation timelines
+* Current state snapshots
+* User interests and feedback
 
-### Stateless Operations
+### Stateless / On-Demand
 
+* Chat responses
 * Feed rendering
-* On‑demand Q&A
 
 ---
 
-## 8. Metrics of Success
+## 8. Success Metrics (Early)
 
-### Product Metrics
+Not vanity metrics.
 
-* Signal‑to‑noise ratio (user feedback)
-* Stories read vs stories skipped
-* Repeat usage
+Signals I care about:
 
-### Technical Metrics
+* Users reading fewer items but feeling more informed
+* Explicit “useful / not useful” feedback
+* Repeated use for the same situations
 
-* LLM cost per user
-* Cache hit rate
-* Latency for insight generation
+Technical sanity checks:
+
+* LLM cost per meaningful update
+* Latency for chat responses
 
 ---
 
 ## 9. MVP Scope
 
-**Included**
+### Included
 
-* Limited set of sources
-* Single user profile
-* Core agent loop
-* Insight‑first feed
+* Limited news sources
+* Situation detection
+* Change-based timelines
+* Chat interface
+* Basic personalization
 
-**Excluded (for now)**
+### Explicitly Excluded (for now)
 
 * Mobile apps
 * Social features
 * Monetization
+* Push notifications
 
 ---
 
-## 10. Why This Project Is Strong
+## 10. Why This Project Exists
 
-* Demonstrates real agent behavior, not wrappers
-* Shows reasoning over time, not static outputs
-* Highlights engineering judgment (where not to use AI)
-* Clear differentiation from typical news apps
+This is not about building another AI demo.
+
+It’s about:
+
+* Rethinking broken defaults
+* Designing better abstractions
+* Building a system that values understanding over engagement
+
+If it works, the app should feel quieter — and that’s the point.
 
 ---
 
-## 11. Open Questions
+## 11. Open Questions (Still Unresolved)
 
-* How aggressive should notifications be?
+* How visible should uncertainty be?
 * Should users see agent reasoning traces?
-* How transparent should confidence scoring be?
+* How much control should users have over noise filtering?
 
+These are design questions, not implementation details — and I’m intentionally leaving them open.
