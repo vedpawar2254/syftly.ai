@@ -1,12 +1,20 @@
 # syftly.ai
 
+<details>
+  <summary><b>Note I have documented the whole process in a blog type format in the "Documenting_the_whole_process" process</b></summary>
+
+* I start with defining the goals at start of the day
+* Then at the end I write all that i did and what i learned from it
+* And finally a short summary of progress till now
+</details>
+
 # Product Requirements Document (PRD)
 
 ## 1. Product Overview
 
 ### Product Name
 
-**syftly.ai** (placeholder)
+**syftly.ai**
 
 ### One‑line Description
 
@@ -254,4 +262,3 @@ Shows multi‑document reasoning and critical analysis, not passive aggregation.
 * Should users see agent reasoning traces?
 * How transparent should confidence scoring be?
 
-(These are intentionally left open for iteration.)

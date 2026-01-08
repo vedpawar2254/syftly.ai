@@ -4,3 +4,5 @@
     - setup project (Frontend, backend, ai-layers)
     - Work on the defining the FRs and the NFRs also the market positionxing
     - also work on the architecture and finalize it
+
+
