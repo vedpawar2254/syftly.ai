@@ -1,4 +1,6 @@
+
 # DAY 2
+`last updated: 3 pm 9 Jan`
 
 - [ ] complete Architecture
 - [ ] create the design guide
