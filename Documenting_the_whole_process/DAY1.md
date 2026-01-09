@@ -1,4 +1,4 @@
-`last updated: 10 am 9 jun`
+`last updated: 11 pm 8 jan`
 - Goals for today
     - [x] setup project (Frontend, backend, ai-layers)
     - [x] Work on the defining the FRs and the NFRs also the market positionxing
