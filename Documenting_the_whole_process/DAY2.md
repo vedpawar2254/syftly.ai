@@ -45,11 +45,83 @@ This immediately:
 
 I decomposed the job into **responsibilities**:
 
-* Observing the world (ingestion)
-* Deciding what belongs in our scope
-* Evaluating whether something *actually changed*
-* Storing the current belief + justification
-* Projecting that understanding to users (feed + chat)
+Responsibility A — World Observation
+
+What it does
+
+Collects new information from external sources
+
+What it does NOT do
+
+Interpretation
+
+Classification
+
+Reasoning
+
+This keeps ingestion dumb and replaceable.
+
+Responsibility B — World Scoping & Resolution
+
+What it does
+
+Decides whether new information belongs in our “world”
+
+Resolves it to:
+
+Existing situation
+
+New evolving situation
+
+One-shot situation
+
+Or discard
+
+This is the gatekeeper.
+
+Responsibility C — Change Evaluation (Critical)
+
+What it does
+
+Compares new evidence against current state
+
+Decides whether a meaningful change occurred
+
+This is where most intelligence lives.
+
+If this is wrong, the whole product fails.
+
+Responsibility D — World State Management
+
+What it does
+
+Stores:
+
+Situations
+
+States
+
+Changes
+
+Evidence links
+
+This is about truth persistence, not UI needs.
+
+Responsibility E — User-Oriented Projection
+
+What it does
+
+Turns world state into:
+
+Feeds
+
+Chat responses
+
+Timelines
+
+Applies personalization and relevance
+
+This is interpretation for humans, not world reasoning.
 
 The most important insight:
 
