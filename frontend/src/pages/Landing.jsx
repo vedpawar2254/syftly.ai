@@ -326,7 +326,7 @@ function ChaosToClarity({ progress }) {
                                 filter: `blur(${(1 - timelineProgress) * 8}px)`,
                             }}
                         >
-                            <div className="text-label mb-6">A  Living  Picture</div>
+                            <div className="text-label text-xl mb-6">A  Living  Picture</div>
                             <h2 className="font-editorial text-4xl md:text-5xl lg:text-6xl leading-[1.05] mb-6">
                                 How  it  began.<br />
                                 How  it  <span className="font-editorial-italic">evolved</span>.<br />
@@ -445,7 +445,7 @@ function PrinciplesSection({ isVisible }) {
             number: '02',
             title: 'Continuity,  not  chaos',
             highlight: 'Continuity',
-            desc: 'Yesterday still matters today. Understanding is cumulative. We restore something quietly lost — the sense that knowledge is allowed to build.',
+            desc: 'Yesterday still matters today. Understanding is cumulative. We restore something quietly lost - the sense that knowledge is allowed to build.',
         },
         {
             number: '03',
@@ -530,12 +530,87 @@ function Landing() {
             <section
                 ref={heroRef}
                 className="min-h-screen flex flex-col justify-center relative"
-                style={{ transform: `translateY(${scrollY * 0.12}px)` }}
             >
-                <div className="py-20">
+                {/* Giant background text - "clarity" */}
+                <div
+                    className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
+                    style={{
+                        opacity: heroVisible ? 0.035 : 0,
+                        transform: `translateY(${scrollY * 0.1}px) scale(${1 + scrollY * 0.0002})`,
+                        transition: 'opacity 2s ease-out',
+                    }}
+                >
+                    <div
+                        className="font-editorial-italic text-[28vw] md:text-[32vw] leading-none text-[var(--color-ink)]"
+                        style={{
+                            transform: heroVisible ? 'translateY(0)' : 'translateY(100px)',
+                            transition: 'transform 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.3s',
+                        }}
+                    >
+                        clarity
+                    </div>
+                </div>
+
+                {/* Floating geometric elements */}
+                <div className="absolute inset-0 pointer-events-none">
+                    {/* Top right circle - pulsing */}
+                    <div
+                        className="absolute -top-20 -right-20 w-80 h-80 rounded-full border border-[var(--color-paper-darker)] pulse-glow"
+                        style={{
+                            opacity: heroVisible ? 0.5 : 0,
+                            transform: `translate(${scrollY * 0.08}px, ${scrollY * 0.04}px) rotate(${scrollY * 0.02}deg)`,
+                            transition: 'opacity 1.5s ease-out 0.5s',
+                        }}
+                    />
+                    {/* Bottom left circle */}
+                    <div
+                        className="absolute -bottom-40 -left-40 w-[500px] h-[500px] rounded-full border border-[var(--color-paper-darker)]"
+                        style={{
+                            opacity: heroVisible ? 0.3 : 0,
+                            transform: `translate(${scrollY * -0.05}px, ${scrollY * -0.03}px) rotate(${scrollY * -0.01}deg)`,
+                            transition: 'opacity 1.5s ease-out 0.8s',
+                        }}
+                    />
+                    {/* Small floating dot 1 */}
+                    <div
+                        className="absolute top-1/4 right-1/4 w-3 h-3 rounded-full bg-[var(--color-accent)] float"
+                        style={{
+                            opacity: heroVisible ? 0.6 : 0,
+                            transition: 'opacity 1s ease-out 1.2s',
+                        }}
+                    />
+                    {/* Small floating dot 2 */}
+                    <div
+                        className="absolute top-2/3 left-1/5 w-2 h-2 rounded-full bg-[var(--color-ink)] float float-delay-2"
+                        style={{
+                            opacity: heroVisible ? 0.3 : 0,
+                            transition: 'opacity 1s ease-out 1.4s',
+                        }}
+                    />
+                    {/* Accent line across - animated draw */}
+                    <div
+                        className="absolute top-1/3 left-0 h-px bg-gradient-to-r from-[var(--color-accent)] via-[var(--color-accent)] to-transparent"
+                        style={{
+                            width: heroVisible ? '35%' : '0%',
+                            opacity: 0.4,
+                            transition: 'width 2s cubic-bezier(0.22, 1, 0.36, 1) 0.8s',
+                        }}
+                    />
+                    {/* Second accent line - right side */}
+                    <div
+                        className="absolute bottom-1/3 right-0 h-px bg-gradient-to-l from-[var(--color-paper-darker)] via-[var(--color-paper-darker)] to-transparent"
+                        style={{
+                            width: heroVisible ? '25%' : '0%',
+                            opacity: 0.6,
+                            transition: 'width 2s cubic-bezier(0.22, 1, 0.36, 1) 1.2s',
+                        }}
+                    />
+                </div>
+
+                <div className="py-20 relative z-10">
                     {/* Masthead */}
                     <div
-                        className="flex items-center gap-6 mb-16 transition-all duration-1000"
+                        className="flex items-center gap-6 mb-12 transition-all duration-1000"
                         style={{
                             opacity: heroVisible ? 1 : 0,
                             transform: heroVisible ? 'translateY(0)' : 'translateY(20px)',
@@ -552,60 +627,77 @@ function Landing() {
                         />
                     </div>
 
-                    {/* Title */}
+                    {/* Title - Much larger with underline */}
                     <h1
-                        className="font-editorial text-7xl md:text-8xl lg:text-9xl mb-8 tracking-tight transition-all duration-1000 delay-200"
+                        className="font-editorial text-8xl md:text-[10rem] lg:text-[12rem] mb-8 tracking-tighter leading-[0.85] transition-all duration-1000 delay-200"
                         style={{
                             opacity: heroVisible ? 1 : 0,
-                            transform: heroVisible ? 'translateY(0)' : 'translateY(50px)',
-                            filter: heroVisible ? 'blur(0)' : 'blur(12px)',
+                            transform: heroVisible ? 'translateY(0)' : 'translateY(60px)',
+                            filter: heroVisible ? 'blur(0)' : 'blur(16px)',
                         }}
                     >
-                        <span className="underline-draw">syftly</span>
+                        <span className="font-editorial-italic underline-draw">syftly</span>
                     </h1>
 
-                    {/* Tagline */}
-                    <div className="max-w-2xl mb-20">
-                        <p className="text-2xl md:text-3xl text-[var(--color-ink-light)] leading-relaxed tracking-wide">
+                    {/* Tagline - More dramatic */}
+                    <div className="max-w-3xl mb-16">
+                        <p className="text-2xl md:text-3xl lg:text-4xl text-[var(--color-ink)] leading-relaxed tracking-wide">
                             <AnimatedWord delay={500} isVisible={heroVisible}>Cut</AnimatedWord>{'  '}
-                            <AnimatedWord delay={580} isVisible={heroVisible}>the</AnimatedWord>{'  '}
-                            <AnimatedWord delay={660} isVisible={heroVisible}>noise.</AnimatedWord>{'  '}
-                            <br className="hidden md:block" />
-                            <AnimatedWord delay={820} isVisible={heroVisible}>Maintain</AnimatedWord>{'  '}
-                            <AnimatedWord delay={900} isVisible={heroVisible}>a</AnimatedWord>{'  '}
-                            <AnimatedWord delay={950} isVisible={heroVisible}>shared</AnimatedWord>{'  '}
-                            <AnimatedWord delay={1000} isVisible={heroVisible}>reality.</AnimatedWord>{'  '}
-                            <br className="hidden md:block" />
-                            <AnimatedWord delay={1160} isVisible={heroVisible}>Respect</AnimatedWord>{'  '}
-                            <AnimatedWord delay={1240} isVisible={heroVisible}>time.</AnimatedWord>
+                            <AnimatedWord delay={600} isVisible={heroVisible}>the</AnimatedWord>{'  '}
+                            <AnimatedWord delay={700} isVisible={heroVisible}>noise.</AnimatedWord>{'  '}
+                            <br />
+                            <AnimatedWord delay={900} isVisible={heroVisible}>Maintain</AnimatedWord>{'  '}
+                            <AnimatedWord delay={1000} isVisible={heroVisible}>a</AnimatedWord>{'  '}
+                            <span className="font-editorial-italic">
+                                <AnimatedWord delay={1100} isVisible={heroVisible}>shared</AnimatedWord>{'  '}
+                                <AnimatedWord delay={1200} isVisible={heroVisible}>reality</AnimatedWord>
+                            </span>
+                            <AnimatedWord delay={1300} isVisible={heroVisible}>.</AnimatedWord>{'  '}
+                            <br />
+                            <AnimatedWord delay={1500} isVisible={heroVisible}>Respect</AnimatedWord>{'  '}
+                            <AnimatedWord delay={1600} isVisible={heroVisible}>time.</AnimatedWord>
                         </p>
                     </div>
 
-                    {/* Accent line */}
+                    {/* Accent block with countdown */}
                     <div
-                        className="divider-accent mb-10 transition-all duration-1000 delay-700"
-                        style={{ width: heroVisible ? '120px' : '0px' }}
-                    />
-
-                    {/* Countdown */}
-                    <div
-                        className="transition-all duration-1000 delay-900"
+                        className="flex items-center gap-8 transition-all duration-1000 delay-700"
                         style={{
                             opacity: heroVisible ? 1 : 0,
-                            transform: heroVisible ? 'translateY(0)' : 'translateY(20px)',
+                            transform: heroVisible ? 'translateX(0)' : 'translateX(-40px)',
                         }}
                     >
+                        <div
+                            className="h-1 bg-[var(--color-accent)]"
+                            style={{
+                                width: heroVisible ? '96px' : '0px',
+                                transition: 'width 1s cubic-bezier(0.22, 1, 0.36, 1) 1.5s',
+                            }}
+                        />
                         <CountdownSmall countdown={countdown} />
                     </div>
+                </div>
 
-                    {/* Scroll indicator */}
-                    <div
-                        className="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 transition-all duration-700"
-                        style={{ opacity: scrollY < 100 ? 0.6 : 0, transform: `translateY(${scrollY * 0.3}px)` }}
-                    >
-                        <span className="text-xs text-[var(--color-ink-muted)] uppercase tracking-[0.3em]">Scroll</span>
-                        <div className="w-px h-12 bg-gradient-to-b from-[var(--color-ink-muted)] to-transparent breathe" />
+                {/* Bottom decorative "01" */}
+                <div
+                    className="absolute bottom-24 right-8 md:right-16 text-right transition-all duration-1000 delay-1000 pointer-events-none"
+                    style={{
+                        opacity: heroVisible ? 0.08 : 0,
+                        transform: heroVisible ? 'translateY(0) rotate(0deg)' : 'translateY(40px) rotate(5deg)',
+                    }}
+                >
+                    <div className="font-editorial text-7xl md:text-8xl lg:text-9xl leading-none">
+                        01
                     </div>
+                </div>
+
+                {/* Scroll indicator */}
+                <div
+                    className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 transition-all duration-700"
+                    style={{ opacity: scrollY < 100 ? 0.6 : 0, transform: `translateY(${scrollY * 0.3}px)` }}
+                >
+                    <span className="text-xs text-[var(--color-ink-muted)] uppercase tracking-[0.3em]">Scroll</span>
+                    <div className="w-px h-12 bg-gradient-to-b from-[var(--color-ink-muted)] to-transparent breathe" />
                 </div>
             </section>
 
@@ -711,15 +803,25 @@ function Landing() {
                     </div>
 
                     <h2
-                        className="font-editorial text-4xl md:text-5xl lg:text-6xl leading-[1.1] mb-10 transition-all duration-1000"
+                        className="font-editorial text-4xl md:text-5xl lg:text-6xl leading-[1.1] mb-6 transition-all duration-1000"
                         style={{
                             opacity: shiftVisible ? 1 : 0,
                             transform: shiftVisible ? 'translateY(0)' : 'translateY(40px)',
                         }}
                     >
-                        Syftly  is  built  around  a  simple  human  need.<br />
-                        To  know  what  we  currently  understand  about  the  world,  and  how  that  understanding  formed.
+                        Syftly  is  built  around<br />
+                        a  simple  human  need.
                     </h2>
+
+                    <p
+                        className="text-xl md:text-2xl text-[var(--color-ink-light)] max-w-2xl leading-relaxed text-spaced transition-all duration-1000 delay-400"
+                        style={{
+                            opacity: shiftVisible ? 1 : 0,
+                            transform: shiftVisible ? 'translateY(0)' : 'translateY(30px)',
+                        }}
+                    >
+                        To  know  what  we  <span className="font-editorial-italic text-[var(--color-ink)]">currently  understand</span>  about  the  world,  and  how  that  understanding  formed.
+                    </p>
 
                     {/* Core belief */}
                     <div
@@ -730,7 +832,7 @@ function Landing() {
                         }}
                     >
                         <p className="font-editorial-italic text-lg md:text-xl leading-relaxed mb-3">
-                            "News  was  meant  to  help  us  understand  the  world — not  lose  our  grip  on  it."
+                            "News  was  meant  to  help  us  understand  the  world - not  lose  our  grip  on  it."
                         </p>
                         <p className="text-sm text-[var(--color-ink-muted)] text-spaced">
                             We're  rebuilding  it  around  that  idea.
@@ -1036,7 +1138,7 @@ function Landing() {
                     <div className="flex flex-col md:flex-row justify-between items-center gap-6">
                         <div className="flex items-center gap-8">
                             <span className="text-sm text-[var(--color-ink-muted)] text-spaced">
-                                ©  2025  Syftly
+                                ©  2026  Syftly
                             </span>
                             <span className="hidden md:inline text-[var(--color-paper-darker)]">|</span>
                             <span className="text-sm text-[var(--color-ink-muted)] text-spaced">
