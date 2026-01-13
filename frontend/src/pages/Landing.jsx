@@ -301,8 +301,8 @@ function ChaosToClarity({ progress }) {
                 >
                     <div className="text-label mb-4 text-center">12  articles  •  Same  event</div>
                     <p className="font-editorial text-2xl md:text-3xl text-center leading-snug">
-                        Articles  are  not  endpoints.<br />
-                        They  are  <span className="font-editorial-italic">inputs</span>.
+                        Articles  are  not  conclusions.<br />
+                        They  are  <span className="font-editorial-italic">evidence</span>.
                     </p>
                 </div>
             </div>
@@ -341,7 +341,7 @@ function ChaosToClarity({ progress }) {
                                 <div className="text-label mb-2">Current  Understanding</div>
                                 <p className="font-editorial text-lg leading-snug">
                                     {activeItems >= 3
-                                        ? "Election  disputed.  Irregularities  now  confirmed."
+                                        ? "The  election  remains  disputed.  Some  irregularities  are  now  confirmed."
                                         : "Weighing  evidence..."}
                                 </p>
                             </div>
@@ -439,13 +439,13 @@ function PrinciplesSection({ isVisible }) {
             number: '01',
             title: 'Evidence,  not  stream',
             highlight: 'Evidence',
-            desc: 'Instead of treating news as a stream, syftly treats it as evidence. Each new piece of information is weighed against what is already known.',
+            desc: 'Instead of treating news as a stream, syftly treats it as evidence within a larger picture. Each new piece of information is weighed against what is already known.',
         },
         {
             number: '02',
             title: 'Continuity,  not  chaos',
             highlight: 'Continuity',
-            desc: 'Yesterday still matters today. Understanding is cumulative. We restore something quietly lost — the sense that knowledge builds.',
+            desc: 'Yesterday still matters today. Understanding is cumulative. We restore something quietly lost — the sense that knowledge is allowed to build.',
         },
         {
             number: '03',
@@ -692,7 +692,7 @@ function Landing() {
                     }}
                 >
                     <p className="text-lg md:text-xl text-[var(--color-ink-light)] leading-relaxed text-spaced text-center">
-                        Headlines  repeat  themselves.  Narratives  reset  every  morning.  Urgency  is  manufactured,  attention  is  extracted,  and  <span className="font-editorial-italic text-[var(--color-ink)]">silence</span> — the  most  honest  signal  of  all — is  treated  as  failure.
+                        Headlines  repeat  themselves.  Narratives  reset  every  morning.  Urgency  is  manufactured,  attention  is  drained,  and  <span className="font-editorial-italic text-[var(--color-ink)]">silence</span>, often  the  most  honest  signal is  treated  as  failure.
                     </p>
                 </div>
             </section>
@@ -717,19 +717,25 @@ function Landing() {
                             transform: shiftVisible ? 'translateY(0)' : 'translateY(40px)',
                         }}
                     >
-                        The  world  does  not  change  every  minute.<br />
-                        Our  understanding  of  it  <span className="font-editorial-italic">shouldn't  either</span>.
+                        Syftly  is  built  around  a  simple  human  need.<br />
+                        To  know  what  we  currently  understand  about  the  world,  and  how  that  understanding  formed.
                     </h2>
 
-                    <p
-                        className="text-xl md:text-2xl text-[var(--color-ink-light)] max-w-2xl leading-relaxed text-spaced transition-all duration-1000 delay-600"
+                    {/* Core belief */}
+                    <div
+                        className="paper-layer p-8 mt-12 max-w-xl transition-all duration-1000 delay-800"
                         style={{
                             opacity: shiftVisible ? 1 : 0,
                             transform: shiftVisible ? 'translateY(0)' : 'translateY(30px)',
                         }}
                     >
-                        Syftly  is  built  around  a  simple  human  need — <span className="font-editorial-italic text-[var(--color-ink)]">to  know  what  is  true  right  now,  and  how  that  truth  came  to  be</span>.
-                    </p>
+                        <p className="font-editorial-italic text-lg md:text-xl leading-relaxed mb-3">
+                            "News  was  meant  to  help  us  understand  the  world — not  lose  our  grip  on  it."
+                        </p>
+                        <p className="text-sm text-[var(--color-ink-muted)] text-spaced">
+                            We're  rebuilding  it  around  that  idea.
+                        </p>
+                    </div>
                 </div>
             </section>
 
@@ -839,7 +845,7 @@ function Landing() {
                             {/* Frustration indicator */}
                             <div className="mt-10 pt-6 border-t border-[var(--color-paper-darker)]">
                                 <div className="text-xs uppercase tracking-widest text-[var(--color-ink-muted)] mb-2">Result</div>
-                                <div className="font-editorial-italic text-lg text-[var(--color-ink-muted)]">"Informed  yet  overwhelmed."</div>
+                                <div className="font-editorial-italic text-lg text-[var(--color-ink-muted)]">"Constantly  informed.  Rarely  grounded."</div>
                             </div>
                         </div>
 
@@ -877,7 +883,7 @@ function Landing() {
                             {/* Relief indicator */}
                             <div className="mt-10 pt-6 border-t border-[var(--color-paper-darker)]">
                                 <div className="text-xs uppercase tracking-widest text-[var(--color-ink-muted)] mb-2">Result</div>
-                                <div className="font-editorial-italic text-lg text-[var(--color-ink)]">"A  clearer  understanding  of  the  world  we  share."</div>
+                                <div className="font-editorial-italic text-lg text-[var(--color-ink)]">"A  steadier  understanding  of  the  world  we  share."</div>
                             </div>
                         </div>
                     </div>
@@ -1015,9 +1021,9 @@ function Landing() {
                         <div className="paper-layer p-6 md:p-8">
                             <div className="text-label mb-4">The  Belief</div>
                             <blockquote className="font-editorial-italic text-lg leading-relaxed text-[var(--color-ink-light)] mb-4">
-                                "For  most  of  history,  humans  learned  about  the  world  slowly.  Knowledge  accumulated.  Understanding  deepened."
+                                "For  most  of  history,  humans  learned  about  the  world  slowly.  Knowledge  accumulated.  Understanding  had  time  to  deepen."
                             </blockquote>
-                            <div className="text-xs text-[var(--color-ink-muted)] uppercase tracking-widest">
+                            <div className="text-sm text-[var(--color-ink-muted)] text-spaced">
                                 We're  returning  to  that.
                             </div>
                         </div>
@@ -1039,7 +1045,7 @@ function Landing() {
                         </div>
 
                         <div className="text-sm text-[var(--color-ink-muted)] text-spaced font-editorial-italic">
-                            Cut  the  noise.  Preserve  understanding.  Respect  attention.
+                            Cut  the  noise.  Maintain  a  shared  reality.  Respect  time.
                         </div>
                     </div>
                 </div>
