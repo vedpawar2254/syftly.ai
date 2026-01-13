@@ -1,3 +1,16 @@
+# HELP ME WITH CODING, instead of you coding
+
+- i want you to figure out how you can make me learn and think, while you do the gruntwork
+
+- right now, we only focus on creating the landing page and a countdown timer
+
+- The UI has to be "MINDBLOWING" and great
+
+- Also help me try out different things in the UI
+
+- Ask as many questions to me as you want so that you make sure i am the one thinking
+
+
 Constraint 1 — Frontend must treat backend as unstable
 
 Assume:

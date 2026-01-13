@@ -20,6 +20,30 @@ This PRD is a *living snapshot*, not a final spec.
 
 ---
 
+# What is syftly.ai
+
+syftly.ai is a **news intelligence product**, not a news reader.
+
+Most news platforms optimize for volume: more headlines, more notifications, more content. syftly.ai takes the opposite approach. It assumes that the world does **not** change every minute — and that your understanding shouldn’t either.
+
+At its core, syftly.ai maintains a continuously updated **understanding of the world** as a set of evolving situations. New articles are treated as *evidence*, not updates by default. Only when new information meaningfully changes what is known about a situation does syftly.ai surface it.
+
+Instead of endless feeds, users see:
+
+* What actually changed
+* How a story evolved over time
+* Where sources agree or conflict
+* Why something matters (or doesn’t)
+
+Interaction is chat-first and insight-oriented. You can ask questions like “What’s going on with Venezuela?” and get a structured view of the situation — timelines, key actors, competing narratives, and source-backed explanations — without reading ten repetitive articles.
+
+The goal of syftly.ai is simple:
+
+> Cut the noise. Preserve understanding. Respect attention.
+
+It is designed for people who care less about being constantly updated, and more about **being correctly informed**.
+
+
 # Product Requirements Document (PRD)
 
 ## 1. Product Overview

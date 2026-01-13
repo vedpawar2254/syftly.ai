@@ -1,13 +1,7 @@
-import './Layout.css';
-
-/**
- * Main app layout wrapper
- * Provides consistent container and spacing
- */
 function Layout({ children }) {
     return (
-        <div className="layout">
-            <main className="layout__main">
+        <div className="min-h-screen">
+            <main className="max-w-5xl mx-auto px-6 md:px-8">
                 {children}
             </main>
         </div>
