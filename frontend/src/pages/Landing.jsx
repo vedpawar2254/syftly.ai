@@ -66,7 +66,6 @@ function useScrollProgress(ref) {
             const windowHeight = window.innerHeight;
             const elementHeight = rect.height;
 
-            // Calculate how far through the element we've scrolled
             const scrollStart = rect.top + windowHeight;
             const scrollEnd = rect.bottom;
             const scrollRange = elementHeight + windowHeight;
@@ -131,71 +130,102 @@ function CountdownSmall({ countdown }) {
     );
 }
 
-// Floating chaotic article
-function ChaoticArticle({ article, index, chaos }) {
-    // Each article has unique position and rotation based on index
+// Realistic news article card
+function NewsArticle({ article, index, chaos }) {
     const positions = [
-        { x: -15, y: -20, rotate: -12 },
-        { x: 25, y: -10, rotate: 8 },
-        { x: -30, y: 15, rotate: -5 },
-        { x: 35, y: 25, rotate: 15 },
-        { x: 5, y: -30, rotate: -18 },
-        { x: -25, y: 30, rotate: 10 },
-        { x: 40, y: -5, rotate: -8 },
-        { x: -10, y: 35, rotate: 20 },
-        { x: 20, y: 40, rotate: -15 },
-        { x: -35, y: -15, rotate: 5 },
-        { x: 30, y: 10, rotate: -20 },
-        { x: -20, y: 5, rotate: 12 },
+        { x: -20, y: -25, rotate: -8 },
+        { x: 28, y: -15, rotate: 6 },
+        { x: -35, y: 10, rotate: -4 },
+        { x: 32, y: 20, rotate: 12 },
+        { x: 8, y: -35, rotate: -14 },
+        { x: -28, y: 28, rotate: 7 },
+        { x: 38, y: -8, rotate: -6 },
+        { x: -12, y: 32, rotate: 16 },
+        { x: 22, y: 35, rotate: -10 },
+        { x: -38, y: -12, rotate: 4 },
+        { x: 25, y: 8, rotate: -16 },
+        { x: -22, y: 2, rotate: 9 },
     ];
 
     const pos = positions[index % positions.length];
 
-    // As chaos decreases (0 = chaos, 1 = clarity), articles fly away
-    const translateX = pos.x + (chaos < 0.5 ? (1 - chaos * 2) * (pos.x > 0 ? 200 : -200) : 0);
-    const translateY = pos.y + (chaos < 0.5 ? (1 - chaos * 2) * (pos.y > 0 ? 150 : -150) : 0);
-    const rotate = pos.rotate * (chaos < 0.5 ? 1 + (1 - chaos * 2) * 2 : 1);
-    const opacity = chaos < 0.5 ? chaos * 2 : 1;
-    const blur = chaos < 0.5 ? (1 - chaos * 2) * 20 : 0;
-    const scale = chaos < 0.3 ? chaos / 0.3 : 1;
+    // Slower transition - chaos fades from 0.3 to 0
+    const translateX = pos.x + (chaos < 0.3 ? (1 - chaos / 0.3) * (pos.x > 0 ? 300 : -300) : 0);
+    const translateY = pos.y + (chaos < 0.3 ? (1 - chaos / 0.3) * (pos.y > 0 ? 200 : -200) : 0);
+    const rotate = pos.rotate * (chaos < 0.3 ? 1 + (1 - chaos / 0.3) * 3 : 1);
+    const opacity = chaos < 0.3 ? chaos / 0.3 : 1;
+    const blur = chaos < 0.3 ? (1 - chaos / 0.3) * 15 : 0;
+    const scale = chaos < 0.2 ? chaos / 0.2 : 1;
 
     return (
         <div
-            className="absolute bg-white/90 backdrop-blur-sm border border-[var(--color-paper-darker)] p-4 md:p-5 rounded shadow-lg max-w-xs transition-none"
+            className="absolute w-64 md:w-72 bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden"
             style={{
                 left: `${50 + pos.x}%`,
                 top: `${50 + pos.y}%`,
                 transform: `translate(-50%, -50%) translate(${translateX}%, ${translateY}%) rotate(${rotate}deg) scale(${scale})`,
                 opacity,
                 filter: `blur(${blur}px)`,
-                zIndex: 10 - index,
+                zIndex: 12 - index,
             }}
         >
-            <div className="text-[10px] text-[var(--color-ink-muted)] uppercase tracking-wider mb-2">
-                {article.source} • {article.time}
+            {/* Image placeholder */}
+            <div
+                className="h-28 md:h-32"
+                style={{
+                    background: `linear-gradient(135deg, ${article.color}15 0%, ${article.color}30 100%)`,
+                }}
+            >
+                <div className="h-full flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-full bg-white/50 flex items-center justify-center">
+                        <span className="text-2xl">{article.emoji}</span>
+                    </div>
+                </div>
             </div>
-            <div className="font-editorial text-sm md:text-base leading-snug">
-                {article.headline}
+
+            {/* Content */}
+            <div className="p-4">
+                {/* Source row */}
+                <div className="flex items-center gap-2 mb-2">
+                    <div
+                        className="w-4 h-4 rounded-full"
+                        style={{ background: article.color }}
+                    />
+                    <span className="text-xs font-medium text-gray-600">{article.source}</span>
+                    <span className="text-xs text-gray-400">•</span>
+                    <span className="text-xs text-gray-400">{article.time}</span>
+                </div>
+
+                {/* Headline */}
+                <h3 className="font-semibold text-sm leading-snug text-gray-900 mb-2">
+                    {article.headline}
+                </h3>
+
+                {/* Meta */}
+                <div className="flex items-center gap-3 text-xs text-gray-400">
+                    <span>{article.readTime} min read</span>
+                    <span className="px-2 py-0.5 bg-gray-100 rounded text-gray-500">{article.category}</span>
+                </div>
             </div>
         </div>
     );
 }
 
-// Immersive chaos-to-clarity timeline section
+// Chaos to Clarity section
 function ChaosToClarity({ progress }) {
     const chaosArticles = [
-        { source: 'Reuters', time: '2h ago', headline: 'Venezuela: Opposition claims election victory' },
-        { source: 'BBC', time: '2h ago', headline: 'Venezuelan opposition declares win in disputed vote' },
-        { source: 'CNN', time: '3h ago', headline: 'Breaking: Tensions rise as election results contested' },
-        { source: 'AP', time: '1h ago', headline: 'International observers raise concerns over Venezuela vote' },
-        { source: 'Al Jazeera', time: '2h ago', headline: 'Venezuela election: What we know so far' },
-        { source: 'NYT', time: '4h ago', headline: 'Opposition leaders claim victory in Venezuela' },
-        { source: 'Guardian', time: '3h ago', headline: 'EU calls for transparency in Venezuelan election' },
-        { source: 'WSJ', time: '1h ago', headline: 'Markets react to Venezuela election uncertainty' },
-        { source: 'France24', time: '2h ago', headline: 'Venezuela vote count continues amid protests' },
-        { source: 'DW', time: '5h ago', headline: 'Analysis: What Venezuela election means for region' },
-        { source: 'Bloomberg', time: '1h ago', headline: 'Oil prices fluctuate on Venezuela news' },
-        { source: 'CNBC', time: '30m ago', headline: 'Breaking: New developments in Venezuela crisis' },
+        { source: 'Reuters', time: '2h ago', headline: 'Venezuela opposition claims victory in disputed presidential election', color: '#ff6b00', emoji: '🗳️', readTime: 4, category: 'Politics' },
+        { source: 'BBC News', time: '2h ago', headline: 'Venezuelan opposition says it won Sunday\'s vote', color: '#bb1919', emoji: '📰', readTime: 3, category: 'World' },
+        { source: 'CNN', time: '3h ago', headline: 'Breaking: Tensions rise as Venezuela election results contested', color: '#cc0000', emoji: '⚡', readTime: 5, category: 'Breaking' },
+        { source: 'AP News', time: '1h ago', headline: 'International observers raise concerns over Venezuela vote count', color: '#ff3b30', emoji: '🔍', readTime: 4, category: 'Politics' },
+        { source: 'Al Jazeera', time: '2h ago', headline: 'Venezuela election: Opposition claims win as govt disputes', color: '#fa9f1b', emoji: '🌍', readTime: 6, category: 'Analysis' },
+        { source: 'NY Times', time: '4h ago', headline: 'Opposition Leaders Claim Victory in Venezuela', color: '#000000', emoji: '📰', readTime: 7, category: 'World' },
+        { source: 'The Guardian', time: '3h ago', headline: 'EU calls for transparency in Venezuelan election results', color: '#052962', emoji: '🇪🇺', readTime: 3, category: 'World' },
+        { source: 'WSJ', time: '1h ago', headline: 'Markets React to Venezuela Election Uncertainty', color: '#0274b6', emoji: '📈', readTime: 4, category: 'Markets' },
+        { source: 'France 24', time: '2h ago', headline: 'Venezuela: Vote count continues as protests grow', color: '#0055a4', emoji: '🇻🇪', readTime: 3, category: 'Breaking' },
+        { source: 'DW News', time: '5h ago', headline: 'Analysis: What the Venezuela election means for the region', color: '#1a1a1a', emoji: '🌎', readTime: 8, category: 'Analysis' },
+        { source: 'Bloomberg', time: '1h ago', headline: 'Oil Prices Swing on Venezuela Political Crisis', color: '#2800d7', emoji: '🛢️', readTime: 3, category: 'Markets' },
+        { source: 'CNBC', time: '30m ago', headline: 'BREAKING: New developments in Venezuela election crisis', color: '#005594', emoji: '🔴', readTime: 2, category: 'Breaking' },
     ];
 
     const timelineEvents = [
@@ -207,52 +237,53 @@ function ChaosToClarity({ progress }) {
         },
         {
             time: '2  days  ago',
-            title: 'International  concerns',
-            description: 'EU and OAS monitoring teams report irregularities.',
+            title: 'International  concerns  raised',
+            description: 'EU and OAS monitoring teams report voting irregularities.',
             type: 'development',
         },
         {
             time: '1  day  ago',
-            title: 'Government  disputes',
+            title: 'Government  disputes  results',
             description: 'Electoral commission announces different results.',
             type: 'contradiction',
         },
         {
             time: '2  hours  ago',
             title: 'AP  confirms  irregularities',
-            description: 'Investigation corroborates concerns with evidence.',
+            description: 'Investigation corroborates concerns with documented evidence.',
             type: 'confirmation',
         },
     ];
 
-    // Phase 1: 0-0.4 = chaos visible
-    // Phase 2: 0.4-0.6 = transition (chaos fades, timeline enters)
-    // Phase 3: 0.6-1 = timeline fully visible
+    // SLOWER TIMING:
+    // Phase 1: 0-0.25 = chaos fully visible
+    // Phase 2: 0.25-0.45 = transition (chaos fades out)
+    // Phase 3: 0.45-1 = timeline visible (longer viewing time)
 
-    const chaosOpacity = progress < 0.4 ? 1 : progress < 0.6 ? 1 - (progress - 0.4) / 0.2 : 0;
+    const chaosOpacity = progress < 0.25 ? 1 : progress < 0.45 ? 1 - (progress - 0.25) / 0.2 : 0;
     const timelineVisible = progress > 0.35;
-    const timelineProgress = progress < 0.4 ? 0 : Math.min(1, (progress - 0.4) / 0.5);
+    const timelineProgress = progress < 0.4 ? 0 : Math.min(1, (progress - 0.4) / 0.35);
 
-    // Calculate which timeline items are active
-    const activeItems = Math.floor(timelineProgress * 5) - 1;
+    // Timeline items activate slower
+    const activeItems = Math.floor(timelineProgress * 6) - 1;
 
     return (
         <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-            {/* Chaos layer - floating articles */}
+            {/* Chaos layer */}
             <div
                 className="absolute inset-0 flex items-center justify-center"
                 style={{ opacity: chaosOpacity, pointerEvents: chaosOpacity > 0.5 ? 'auto' : 'none' }}
             >
-                {/* Background noise text */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-5">
-                    <div className="text-[120px] md:text-[200px] font-editorial leading-none text-center">
-                        NOISE
+                {/* Background NOISE text - now italic */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-[0.03]">
+                    <div className="text-[100px] md:text-[180px] lg:text-[220px] font-editorial-italic leading-none text-center select-none">
+                        noise
                     </div>
                 </div>
 
                 {/* Floating articles */}
                 {chaosArticles.map((article, i) => (
-                    <ChaoticArticle
+                    <NewsArticle
                         key={i}
                         article={article}
                         index={i}
@@ -262,14 +293,15 @@ function ChaosToClarity({ progress }) {
 
                 {/* Center question */}
                 <div
-                    className="relative z-20 bg-[var(--color-paper)] px-8 py-6 shadow-2xl border border-[var(--color-paper-darker)]"
+                    className="relative z-20 bg-[var(--color-paper)] px-10 py-8 shadow-2xl border border-[var(--color-paper-darker)] max-w-md"
                     style={{
-                        opacity: chaosOpacity > 0.7 ? 1 : chaosOpacity / 0.7,
+                        opacity: chaosOpacity > 0.6 ? 1 : chaosOpacity / 0.6,
                         transform: `scale(${0.9 + chaosOpacity * 0.1})`,
                     }}
                 >
-                    <p className="font-editorial-italic text-xl md:text-2xl text-center">
-                        "12  articles.  Same  story.<br />What  actually  changed?"
+                    <div className="text-label mb-4 text-center">12  sources  •  Same  story</div>
+                    <p className="font-editorial text-2xl md:text-3xl text-center leading-snug">
+                        What  actually  changed?
                     </p>
                 </div>
             </div>
@@ -286,13 +318,14 @@ function ChaosToClarity({ progress }) {
                     <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
                         {/* Left: Message */}
                         <div
-                            className="transition-all duration-1000"
+                            className="transition-all duration-1000 ease-out"
                             style={{
                                 opacity: timelineProgress,
-                                transform: `translateX(${(1 - timelineProgress) * -100}px)`,
+                                transform: `translateX(${(1 - timelineProgress) * -80}px)`,
+                                filter: `blur(${(1 - timelineProgress) * 8}px)`,
                             }}
                         >
-                            <div className="text-label mb-6">Instead</div>
+                            <div className="text-label mb-6">With  Syftly</div>
                             <h2 className="font-editorial text-4xl md:text-5xl lg:text-6xl leading-[1.05] mb-6">
                                 One  story.<br />
                                 <span className="font-editorial-italic">Four</span>  changes.<br />
@@ -301,11 +334,11 @@ function ChaosToClarity({ progress }) {
 
                             {/* Understanding box */}
                             <div
-                                className={`paper-layer p-6 mt-8 transition-all duration-700 ${activeItems >= 3 ? 'pulse-glow' : ''}`}
-                                style={{ opacity: activeItems >= 3 ? 1 : 0.4 }}
+                                className={`paper-layer p-6 mt-8 transition-all duration-1000 ${activeItems >= 3 ? 'pulse-glow' : ''}`}
+                                style={{ opacity: activeItems >= 3 ? 1 : 0.3 }}
                             >
                                 <div className="text-label mb-2">Current  Understanding</div>
-                                <p className="font-editorial text-lg">
+                                <p className="font-editorial text-lg leading-snug">
                                     {activeItems >= 3
                                         ? "Election  disputed.  Irregularities  confirmed  by  AP."
                                         : "Building  understanding..."}
@@ -315,20 +348,24 @@ function ChaosToClarity({ progress }) {
 
                         {/* Right: Timeline */}
                         <div
-                            className="transition-all duration-1000"
+                            className="transition-all duration-1000 ease-out"
                             style={{
                                 opacity: timelineProgress,
-                                transform: `translateX(${(1 - timelineProgress) * 100}px)`,
+                                transform: `translateX(${(1 - timelineProgress) * 80}px)`,
+                                filter: `blur(${(1 - timelineProgress) * 8}px)`,
                             }}
                         >
-                            <div className="relative pl-8 md:pl-12">
-                                {/* Track */}
-                                <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[var(--color-paper-darker)] overflow-hidden">
+                            <div className="relative ml-8">
+                                {/* Track - use transform to center the line */}
+                                <div
+                                    className="absolute top-2 bottom-2 w-[2px] bg-[var(--color-paper-darker)] overflow-hidden"
+                                    style={{ left: '12px', transform: 'translateX(-50%)' }}
+                                >
                                     <div
-                                        className="absolute top-0 left-0 w-full bg-gradient-to-b from-[var(--color-accent)] to-[var(--color-ink)]"
+                                        className="absolute top-0 left-0 w-full bg-[var(--color-ink)]"
                                         style={{
                                             height: `${Math.max(0, (activeItems + 1) / timelineEvents.length) * 100}%`,
-                                            transition: 'height 0.8s cubic-bezier(0.22, 1, 0.36, 1)',
+                                            transition: 'height 1s cubic-bezier(0.22, 1, 0.36, 1)',
                                         }}
                                     />
                                 </div>
@@ -336,43 +373,38 @@ function ChaosToClarity({ progress }) {
                                 {/* Events */}
                                 {timelineEvents.map((event, i) => {
                                     const isActive = i <= activeItems;
-                                    const delay = i * 150;
 
                                     return (
                                         <div
                                             key={i}
-                                            className="relative pb-8 last:pb-0 transition-all duration-700"
+                                            className="relative pb-10 last:pb-0 transition-all duration-700"
                                             style={{
-                                                transitionDelay: `${delay}ms`,
-                                                opacity: timelineProgress > 0.2 ? 1 : 0,
-                                                transform: timelineProgress > 0.2 ? 'translateX(0)' : 'translateX(30px)',
+                                                transitionDelay: `${i * 200}ms`,
+                                                opacity: timelineProgress > 0.3 ? 1 : 0,
+                                                transform: timelineProgress > 0.3 ? 'translateX(0)' : 'translateX(40px)',
                                             }}
                                         >
-                                            {/* Node */}
+                                            {/* Node - centered on same axis as track using transform */}
                                             <div
-                                                className={`absolute -left-[22px] md:-left-[26px] top-1 w-5 h-5 md:w-6 md:h-6 rounded-full border-[3px] transition-all duration-500 ${
+                                                className={`absolute top-0 w-6 h-6 rounded-full border-2 transition-all duration-700 ${
                                                     isActive
-                                                        ? 'bg-[var(--color-accent)] border-[var(--color-accent)] scale-110'
+                                                        ? 'bg-[var(--color-ink)] border-[var(--color-ink)]'
                                                         : 'bg-[var(--color-paper)] border-[var(--color-paper-darker)]'
                                                 }`}
+                                                style={{ left: '12px', transform: 'translateX(-50%)' }}
                                             >
                                                 {isActive && (
-                                                    <div className="absolute inset-[-6px] rounded-full border-2 border-[var(--color-accent)] opacity-30 animate-ping" />
+                                                    <div className="absolute inset-[-6px] rounded-full border border-[var(--color-ink)] opacity-30 animate-ping" />
                                                 )}
                                             </div>
 
                                             {/* Content */}
-                                            <div className="ml-4">
-                                                <div className="flex flex-wrap items-center gap-2 mb-1">
+                                            <div className="ml-12 pl-4">
+                                                <div className="flex flex-wrap items-center gap-3 mb-1">
                                                     <span className="text-[10px] text-[var(--color-ink-muted)] uppercase tracking-widest">
                                                         {event.time}
                                                     </span>
-                                                    <span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 rounded ${
-                                                        event.type === 'claim' ? 'bg-amber-100 text-amber-800' :
-                                                        event.type === 'development' ? 'bg-blue-100 text-blue-800' :
-                                                        event.type === 'contradiction' ? 'bg-red-100 text-red-800' :
-                                                        'bg-emerald-100 text-emerald-800'
-                                                    }`}>
+                                                    <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 bg-[var(--color-paper-dark)] text-[var(--color-ink-light)]">
                                                         {event.type}
                                                     </span>
                                                 </div>
@@ -388,14 +420,75 @@ function ChaosToClarity({ progress }) {
                 </div>
             </div>
 
-            {/* Scroll indicator at bottom when in chaos phase */}
+            {/* Scroll indicator */}
             <div
-                className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 transition-opacity duration-500"
-                style={{ opacity: progress < 0.3 ? 0.6 : 0 }}
+                className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 transition-opacity duration-700"
+                style={{ opacity: progress < 0.2 ? 0.6 : 0 }}
             >
                 <span className="text-xs text-[var(--color-ink-muted)] uppercase tracking-[0.3em]">Scroll  for  clarity</span>
                 <div className="w-px h-8 bg-gradient-to-b from-[var(--color-ink-muted)] to-transparent breathe" />
             </div>
+        </div>
+    );
+}
+
+// New Principles Section - Large typographic blocks, not timeline
+function PrinciplesSection({ isVisible }) {
+    const principles = [
+        {
+            number: '01',
+            title: 'Situations,  not  articles',
+            highlight: 'Situations',
+            desc: 'The world unfolds in evolving stories. We track the story itself — not the endless posts about it.',
+        },
+        {
+            number: '02',
+            title: 'Changes,  not  updates',
+            highlight: 'Changes',
+            desc: 'If nothing meaningful shifted, you hear nothing. Silence is a feature, not a bug.',
+        },
+        {
+            number: '03',
+            title: 'Understanding,  not  volume',
+            highlight: 'Understanding',
+            desc: 'Reading less is the goal. Being correctly informed is what matters.',
+        },
+    ];
+
+    return (
+        <div className="space-y-32 md:space-y-48">
+            {principles.map((item, i) => (
+                <div
+                    key={i}
+                    className="transition-all duration-1000"
+                    style={{
+                        transitionDelay: `${i * 150}ms`,
+                        opacity: isVisible ? 1 : 0,
+                        transform: isVisible ? 'translateY(0)' : 'translateY(60px)',
+                    }}
+                >
+                    {/* Large number */}
+                    <div className="text-[120px] md:text-[180px] lg:text-[220px] font-editorial leading-none text-[var(--color-paper-darker)] select-none -mb-16 md:-mb-24 lg:-mb-32">
+                        {item.number}
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="font-editorial text-3xl md:text-4xl lg:text-5xl mb-6 relative">
+                        <span className="font-editorial-italic text-[var(--color-accent)]">{item.highlight}</span>
+                        {item.title.replace(item.highlight, '').replace(',', ',')}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-lg md:text-xl text-[var(--color-ink-light)] leading-relaxed text-spaced max-w-xl">
+                        {item.desc}
+                    </p>
+
+                    {/* Divider */}
+                    {i < principles.length - 1 && (
+                        <div className="divider-fade mt-16 md:mt-24" />
+                    )}
+                </div>
+            ))}
         </div>
     );
 }
@@ -418,27 +511,9 @@ function Landing() {
     const [compareRef, compareVisible] = useScrollReveal();
     const [closingRef, closingVisible] = useScrollReveal();
 
-    const principles = [
-        {
-            number: '01',
-            title: 'Situations,  not  articles',
-            desc: 'The world unfolds in evolving stories. We track the story itself — not the endless posts about it.',
-        },
-        {
-            number: '02',
-            title: 'Changes,  not  updates',
-            desc: 'If nothing meaningful shifted, you hear nothing. Silence is a feature, not a bug.',
-        },
-        {
-            number: '03',
-            title: 'Understanding,  not  volume',
-            desc: 'Reading less is the goal. Being correctly informed is what matters.',
-        },
-    ];
-
     return (
         <div className="relative">
-            {/* Fixed countdown in corner */}
+            {/* Fixed countdown */}
             <div
                 className="fixed top-6 right-6 z-50 transition-all duration-700"
                 style={{
@@ -458,7 +533,7 @@ function Landing() {
                 style={{ transform: `translateY(${scrollY * 0.12}px)` }}
             >
                 <div className="py-20">
-                    {/* Masthead line */}
+                    {/* Masthead */}
                     <div
                         className="flex items-center gap-6 mb-16 transition-all duration-1000"
                         style={{
@@ -477,7 +552,7 @@ function Landing() {
                         />
                     </div>
 
-                    {/* Main title */}
+                    {/* Title */}
                     <h1
                         className="font-editorial text-7xl md:text-8xl lg:text-9xl mb-8 tracking-tight transition-all duration-1000 delay-200"
                         style={{
@@ -545,11 +620,16 @@ function Landing() {
                         The  Problem
                     </div>
 
-                    <AnimatedHeadline
-                        text="You're  drowning  in  updates  about  things  that  haven't  actually  changed."
-                        isVisible={problemVisible}
-                        className="font-editorial text-4xl md:text-5xl lg:text-6xl leading-[1.1] mb-12"
-                    />
+                    <h2
+                        className="font-editorial text-4xl md:text-5xl lg:text-6xl leading-[1.1] mb-12 transition-all duration-1000"
+                        style={{
+                            opacity: problemVisible ? 1 : 0,
+                            transform: problemVisible ? 'translateY(0)' : 'translateY(40px)',
+                        }}
+                    >
+                        You're  <span className="font-editorial-italic">drowning</span>  in  updates<br />
+                        about  things  that  haven't  actually  changed.
+                    </h2>
                 </div>
             </section>
 
@@ -630,11 +710,16 @@ function Landing() {
                         The  Shift
                     </div>
 
-                    <AnimatedHeadline
-                        text="What  if  news  only  spoke  when  something  actually  changed?"
-                        isVisible={shiftVisible}
-                        className="font-editorial text-4xl md:text-5xl lg:text-6xl leading-[1.1] mb-10"
-                    />
+                    <h2
+                        className="font-editorial text-4xl md:text-5xl lg:text-6xl leading-[1.1] mb-10 transition-all duration-1000"
+                        style={{
+                            opacity: shiftVisible ? 1 : 0,
+                            transform: shiftVisible ? 'translateY(0)' : 'translateY(40px)',
+                        }}
+                    >
+                        What  if  news  only  spoke<br />
+                        when  something  <span className="font-editorial-italic">actually</span>  changed?
+                    </h2>
 
                     <p
                         className="text-xl md:text-2xl text-[var(--color-ink-light)] max-w-2xl leading-relaxed text-spaced transition-all duration-1000 delay-600"
@@ -649,146 +734,314 @@ function Landing() {
                 </div>
             </section>
 
-            {/* ===== CHAOS TO CLARITY - Immersive Timeline ===== */}
+            {/* ===== CHAOS TO CLARITY ===== */}
             <section
                 ref={chaosRef}
                 className="relative"
-                style={{ height: '250vh' }} // Extra scroll room for the effect
+                style={{ height: '350vh' }} // More scroll room = slower effect
             >
                 <div className="sticky top-0 h-screen">
                     <ChaosToClarity progress={chaosProgress} />
                 </div>
             </section>
 
-            {/* ===== PRINCIPLES ===== */}
-            <section ref={principlesRef} className="py-24 md:py-32">
-                <div className="max-w-3xl ml-8 md:ml-16">
-                    {principles.map((item, i) => (
-                        <div
-                            key={i}
-                            className="principle-item transition-all duration-700"
-                            style={{
-                                transitionDelay: `${i * 200}ms`,
-                                opacity: principlesVisible ? 1 : 0,
-                                transform: principlesVisible ? 'translateX(0)' : 'translateX(-40px)',
-                            }}
-                        >
-                            <div className="principle-number float float-delay-1">
-                                {item.number}
-                            </div>
+            {/* ===== PRINCIPLES - New Design ===== */}
+            <section ref={principlesRef} className="py-32 md:py-48">
+                <div className="max-w-4xl">
+                    <div
+                        className="text-label mb-16 transition-all duration-700"
+                        style={{
+                            opacity: principlesVisible ? 1 : 0,
+                            transform: principlesVisible ? 'translateX(0)' : 'translateX(-30px)',
+                        }}
+                    >
+                        Our  Principles
+                    </div>
 
-                            <h3 className="font-editorial text-2xl md:text-3xl lg:text-4xl mb-4 tracking-wide">
-                                {item.title}
-                            </h3>
-
-                            <p className="text-lg md:text-xl text-[var(--color-ink-light)] leading-relaxed text-spaced max-w-xl">
-                                {item.desc}
-                            </p>
-                        </div>
-                    ))}
+                    <PrinciplesSection isVisible={principlesVisible} />
                 </div>
             </section>
 
             {/* ===== BEFORE/AFTER ===== */}
-            <section ref={compareRef} className="py-32 md:py-48">
-                <div className="max-w-4xl mx-auto">
-                    <AnimatedHeadline
-                        text="News  that  respects  your  time."
-                        isVisible={compareVisible}
-                        className="font-editorial text-4xl md:text-5xl lg:text-6xl leading-[1.1] text-center mb-16"
-                    />
+            <section ref={compareRef} className="py-32 md:py-48 relative">
+                {/* Ruled lines background */}
+                <div className="absolute inset-0 ruled-lines opacity-30 pointer-events-none" />
+
+                <div className="max-w-5xl mx-auto relative">
+                    {/* Section header */}
+                    <div
+                        className="text-label mb-8 transition-all duration-700"
+                        style={{
+                            opacity: compareVisible ? 1 : 0,
+                            transform: compareVisible ? 'translateX(0)' : 'translateX(-30px)',
+                        }}
+                    >
+                        The  Difference
+                    </div>
+
+                    <h2
+                        className="font-editorial text-4xl md:text-5xl lg:text-6xl leading-[1.1] mb-6 transition-all duration-1000"
+                        style={{
+                            opacity: compareVisible ? 1 : 0,
+                            transform: compareVisible ? 'translateY(0)' : 'translateY(40px)',
+                        }}
+                    >
+                        News  that  <span className="font-editorial-italic">respects</span>  your  time.
+                    </h2>
+
+                    <p
+                        className="text-xl text-[var(--color-ink-light)] mb-16 max-w-2xl text-spaced transition-all duration-1000 delay-200"
+                        style={{
+                            opacity: compareVisible ? 1 : 0,
+                            transform: compareVisible ? 'translateY(0)' : 'translateY(30px)',
+                        }}
+                    >
+                        The  old  way  exhausts  you.  The  new  way  enlightens  you.
+                    </p>
 
                     <div
-                        className="grid md:grid-cols-2 gap-8 md:gap-12 transition-all duration-1000 delay-400"
+                        className="grid md:grid-cols-2 gap-0 md:gap-0 transition-all duration-1000 delay-400"
                         style={{
                             opacity: compareVisible ? 1 : 0,
                             transform: compareVisible ? 'translateY(0)' : 'translateY(50px)',
                         }}
                     >
-                        <div className="p-8 md:p-10 border border-[var(--color-paper-darker)] rounded-sm opacity-60">
-                            <h4 className="font-editorial text-xl md:text-2xl text-[var(--color-ink-muted)] line-through mb-8">
-                                Before
-                            </h4>
-                            <ul className="space-y-5 text-[var(--color-ink-light)] text-spaced">
+                        {/* Before column */}
+                        <div className="p-10 md:p-12 border border-[var(--color-paper-darker)] bg-gradient-to-br from-[var(--color-paper-dark)]/50 to-transparent relative">
+                            {/* Strikethrough decoration */}
+                            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-200/60 via-red-300/40 to-transparent" />
+
+                            <div className="flex items-center gap-4 mb-10">
+                                <h4 className="font-editorial text-2xl md:text-3xl text-[var(--color-ink-muted)]">
+                                    <span className="line-through decoration-red-300/60">Before</span>
+                                </h4>
+                                <div className="h-px flex-1 bg-[var(--color-paper-darker)]" />
+                            </div>
+
+                            <ul className="space-y-7 text-[var(--color-ink-light)] text-spaced">
                                 {[
-                                    '47  notifications  about  the  same  story',
-                                    'No  idea  what  actually  changed',
-                                    'Constantly  catching  up,  never  caught  up',
+                                    { text: '47  notifications  about  the  same  story', sub: 'Endless  noise' },
+                                    { text: 'No  idea  what  actually  changed', sub: 'Zero  clarity' },
+                                    { text: 'Constantly  catching  up,  never  caught  up', sub: 'Exhausting  cycle' },
+                                    { text: 'Reading  10  articles  to  learn  one  thing', sub: 'Wasted  time' },
                                 ].map((item, i) => (
-                                    <li key={i} className="flex items-start gap-4">
-                                        <span className="text-red-400 mt-0.5 text-lg">×</span>
-                                        <span>{item}</span>
+                                    <li key={i} className="group">
+                                        <div className="flex items-start gap-4">
+                                            <span className="text-red-400/70 mt-0.5 text-lg font-light">×</span>
+                                            <div>
+                                                <span className="block">{item.text}</span>
+                                                <span className="text-xs text-[var(--color-ink-muted)] uppercase tracking-widest mt-1 block opacity-0 group-hover:opacity-100 transition-opacity duration-300">{item.sub}</span>
+                                            </div>
+                                        </div>
                                     </li>
                                 ))}
                             </ul>
+
+                            {/* Frustration indicator */}
+                            <div className="mt-10 pt-6 border-t border-[var(--color-paper-darker)]">
+                                <div className="text-xs uppercase tracking-widest text-[var(--color-ink-muted)] mb-2">Result</div>
+                                <div className="font-editorial-italic text-lg text-[var(--color-ink-muted)]">"I  can't  keep  up."</div>
+                            </div>
                         </div>
 
-                        <div className="paper-layer p-8 md:p-10 hover-scale">
-                            <h4 className="font-editorial text-xl md:text-2xl mb-8">
-                                After
-                            </h4>
-                            <ul className="space-y-5 text-spaced">
+                        {/* After column */}
+                        <div className="paper-layer p-10 md:p-12 relative overflow-hidden hover-scale margin-line">
+                            {/* Accent decoration */}
+                            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--color-accent)] via-emerald-400/40 to-transparent" />
+
+                            <div className="flex items-center gap-4 mb-10">
+                                <h4 className="font-editorial text-2xl md:text-3xl">
+                                    With  <span className="font-editorial-italic text-[var(--color-accent)]">Syftly</span>
+                                </h4>
+                                <div className="h-px flex-1 bg-[var(--color-paper-darker)]" />
+                            </div>
+
+                            <ul className="space-y-7 text-spaced">
                                 {[
-                                    'One  update  when  something  actually  matters',
-                                    'Clear  understanding  of  what  shifted',
-                                    'Silence  when  nothing  changed',
+                                    { text: 'One  update  when  something  actually  matters', sub: 'Signal  only' },
+                                    { text: 'Clear  understanding  of  what  shifted', sub: 'Instant  clarity' },
+                                    { text: 'Silence  when  nothing  changed', sub: 'Peaceful  inbox' },
+                                    { text: 'Ask  questions,  get  answers  with  sources', sub: 'True  understanding' },
                                 ].map((item, i) => (
-                                    <li key={i} className="flex items-start gap-4">
-                                        <span className="text-emerald-500 mt-0.5 text-lg">✓</span>
-                                        <span>{item}</span>
+                                    <li key={i} className="group">
+                                        <div className="flex items-start gap-4">
+                                            <span className="text-emerald-500 mt-0.5 text-lg">✓</span>
+                                            <div>
+                                                <span className="block">{item.text}</span>
+                                                <span className="text-xs text-[var(--color-accent)] uppercase tracking-widest mt-1 block opacity-0 group-hover:opacity-100 transition-opacity duration-300">{item.sub}</span>
+                                            </div>
+                                        </div>
                                     </li>
                                 ))}
                             </ul>
+
+                            {/* Relief indicator */}
+                            <div className="mt-10 pt-6 border-t border-[var(--color-paper-darker)]">
+                                <div className="text-xs uppercase tracking-widest text-[var(--color-ink-muted)] mb-2">Result</div>
+                                <div className="font-editorial-italic text-lg text-[var(--color-ink)]">"I  actually  understand."</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
             {/* ===== CLOSING ===== */}
-            <section ref={closingRef} className="py-32 md:py-48">
-                <div className="max-w-3xl mx-auto text-center">
-                    <AnimatedHeadline
-                        text="The  quieter  way  to  stay  informed."
-                        isVisible={closingVisible}
-                        className="font-editorial text-4xl md:text-5xl lg:text-6xl leading-[1.1] mb-10"
-                    />
+            <section ref={closingRef} className="py-40 md:py-56 relative">
+                {/* Grid texture background */}
+                <div className="absolute inset-0 grid-texture opacity-40 pointer-events-none" />
 
-                    <p
-                        className="text-xl md:text-2xl text-[var(--color-ink-light)] mb-16 text-spaced transition-all duration-1000 delay-500"
-                        style={{ opacity: closingVisible ? 1 : 0 }}
-                    >
-                        Launching  in  {countdown.days}  days.
-                    </p>
-
+                <div className="max-w-4xl mx-auto text-center relative">
+                    {/* Label */}
                     <div
-                        className="flex justify-center gap-10 md:gap-20 transition-all duration-1000 delay-700"
+                        className="text-label mb-8 transition-all duration-700"
+                        style={{
+                            opacity: closingVisible ? 1 : 0,
+                            transform: closingVisible ? 'translateY(0)' : 'translateY(-20px)',
+                        }}
+                    >
+                        Coming  Soon
+                    </div>
+
+                    {/* Main headline with italic */}
+                    <h2
+                        className="font-editorial text-5xl md:text-6xl lg:text-7xl leading-[1.05] mb-8 transition-all duration-1000"
                         style={{
                             opacity: closingVisible ? 1 : 0,
                             transform: closingVisible ? 'translateY(0)' : 'translateY(40px)',
                         }}
                     >
-                        {[
-                            { value: countdown.days, label: 'Days' },
-                            { value: countdown.hours, label: 'Hours' },
-                            { value: countdown.minutes, label: 'Minutes' },
-                        ].map((item, i) => (
-                            <div key={i} className="text-center group cursor-default">
-                                <div className="font-editorial text-6xl md:text-8xl mb-3 group-hover:text-[var(--color-accent)] transition-colors duration-300">
-                                    {String(item.value).padStart(2, '0')}
+                        The  <span className="font-editorial-italic">quieter</span>  way<br />
+                        to  stay  informed.
+                    </h2>
+
+                    {/* Subtext */}
+                    <p
+                        className="text-lg md:text-xl text-[var(--color-ink-light)] mb-20 max-w-xl mx-auto text-spaced transition-all duration-1000 delay-300"
+                        style={{
+                            opacity: closingVisible ? 1 : 0,
+                            transform: closingVisible ? 'translateY(0)' : 'translateY(30px)',
+                        }}
+                    >
+                        Less  reading.  More  understanding.  No  anxiety.
+                    </p>
+
+                    {/* Countdown block */}
+                    <div
+                        className="paper-layer paper-stack inline-block px-12 md:px-20 py-10 md:py-14 transition-all duration-1000 delay-500"
+                        style={{
+                            opacity: closingVisible ? 1 : 0,
+                            transform: closingVisible ? 'translateY(0) scale(1)' : 'translateY(50px) scale(0.95)',
+                        }}
+                    >
+                        <div className="text-label mb-6">Launching  in</div>
+
+                        <div className="flex justify-center gap-8 md:gap-16 mb-8">
+                            {[
+                                { value: countdown.days, label: 'Days' },
+                                { value: countdown.hours, label: 'Hours' },
+                                { value: countdown.minutes, label: 'Mins' },
+                                { value: countdown.seconds, label: 'Secs' },
+                            ].map((item, i) => (
+                                <div key={i} className="text-center group cursor-default">
+                                    <div className="font-editorial text-5xl md:text-7xl lg:text-8xl mb-2 group-hover:text-[var(--color-accent)] transition-colors duration-300">
+                                        {String(item.value).padStart(2, '0')}
+                                    </div>
+                                    <div className="text-[10px] md:text-xs text-[var(--color-ink-muted)] uppercase tracking-widest">{item.label}</div>
                                 </div>
-                                <div className="text-label">{item.label}</div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
+
+                        {/* Divider */}
+                        <div className="divider-fade mb-6" />
+
+                        {/* Promise */}
+                        <p className="font-editorial-italic text-lg text-[var(--color-ink-light)]">
+                            "Finally,  news  that  knows  when  to  be  quiet."
+                        </p>
+                    </div>
+
+                    {/* Decorative elements */}
+                    <div
+                        className="mt-16 flex justify-center gap-3 transition-all duration-1000 delay-700"
+                        style={{ opacity: closingVisible ? 0.4 : 0 }}
+                    >
+                        <div className="w-2 h-2 rounded-full bg-[var(--color-ink)] float float-delay-1" />
+                        <div className="w-2 h-2 rounded-full bg-[var(--color-ink)] float float-delay-2" />
+                        <div className="w-2 h-2 rounded-full bg-[var(--color-ink)] float float-delay-3" />
                     </div>
                 </div>
             </section>
 
             {/* ===== FOOTER ===== */}
-            <footer className="py-20 border-t border-[var(--color-paper-darker)]">
-                <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-                    <div className="font-editorial text-2xl underline-draw">syftly</div>
-                    <div className="text-sm text-[var(--color-ink-muted)] text-spaced">
-                        Understanding  changes,  not  chasing  updates.
+            <footer className="py-20 md:py-28 border-t border-[var(--color-paper-darker)] relative">
+                {/* Ruled lines subtle background */}
+                <div className="absolute inset-0 ruled-lines opacity-20 pointer-events-none" />
+
+                <div className="relative">
+                    {/* Top section */}
+                    <div className="grid md:grid-cols-3 gap-12 md:gap-8 mb-16">
+                        {/* Brand column */}
+                        <div>
+                            <div className="font-editorial text-3xl mb-4 underline-draw inline-block">syftly</div>
+                            <p className="text-[var(--color-ink-light)] text-spaced leading-relaxed mb-6">
+                                News  intelligence  that  respects  your  attention.  We  track  situations,  not  headlines.
+                            </p>
+                            {/* <div className="text-label">Est.  2025</div> */}
+                        </div>
+
+                        {/* Philosophy column */}
+                        <div>
+                            <div className="text-label mb-6">Our  Philosophy</div>
+                            <ul className="space-y-3 text-[var(--color-ink-light)] text-spaced">
+                                <li className="flex items-center gap-3">
+                                    <span className="w-1 h-1 rounded-full bg-[var(--color-ink-muted)]" />
+                                    Silence  is  a  feature
+                                </li>
+                                <li className="flex items-center gap-3">
+                                    <span className="w-1 h-1 rounded-full bg-[var(--color-ink-muted)]" />
+                                    Understanding  over  volume
+                                </li>
+                                <li className="flex items-center gap-3">
+                                    <span className="w-1 h-1 rounded-full bg-[var(--color-ink-muted)]" />
+                                    Situations,  not  articles
+                                </li>
+                                <li className="flex items-center gap-3">
+                                    <span className="w-1 h-1 rounded-full bg-[var(--color-ink-muted)]" />
+                                    Changes,  not  updates
+                                </li>
+                            </ul>
+                        </div>
+
+                        {/* Quote column */}
+                        <div className="paper-layer p-6 md:p-8">
+                            <div className="text-label mb-4">Why  We  Built  This</div>
+                            <blockquote className="font-editorial-italic text-lg leading-relaxed text-[var(--color-ink-light)] mb-4">
+                                "We  were  tired  of  being  informed  yet  overwhelmed.  Knowing  everything,  understanding  nothing."
+                            </blockquote>
+                            <div className="text-xs text-[var(--color-ink-muted)] uppercase tracking-widest">
+                                —  Ved
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="divider-fade mb-10" />
+
+                    {/* Bottom section */}
+                    <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div className="flex items-center gap-8">
+                            <span className="text-sm text-[var(--color-ink-muted)] text-spaced">
+                                ©  2025  Syftly
+                            </span>
+                            <span className="hidden md:inline text-[var(--color-paper-darker)]">|</span>
+                            <span className="text-sm text-[var(--color-ink-muted)] text-spaced">
+                                Made  with  intention
+                            </span>
+                        </div>
+
+                        <div className="text-sm text-[var(--color-ink-muted)] text-spaced font-editorial-italic">
+                            Cut  the  noise.  Preserve  understanding.  Respect  attention.
+                        </div>
                     </div>
                 </div>
             </footer>
