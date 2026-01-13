@@ -1144,6 +1144,15 @@ function Landing() {
                             <span className="text-sm text-[var(--color-ink-muted)] text-spaced">
                                 Made  with  intention
                             </span>
+                            <span className="hidden md:inline text-[var(--color-paper-darker)]">|</span>
+                            <a
+                                href="https://github.com/vedpawar2254/syftly.ai"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sm text-[var(--color-ink-muted)] text-spaced hover:text-[var(--color-ink)] transition-colors duration-300 underline-draw"
+                            >
+                                GitHub
+                            </a>
                         </div>
 
                         <div className="text-sm text-[var(--color-ink-muted)] text-spaced font-editorial-italic">
