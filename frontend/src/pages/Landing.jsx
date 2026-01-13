@@ -299,9 +299,10 @@ function ChaosToClarity({ progress }) {
                         transform: `scale(${0.9 + chaosOpacity * 0.1})`,
                     }}
                 >
-                    <div className="text-label mb-4 text-center">12  sources  •  Same  story</div>
+                    <div className="text-label mb-4 text-center">12  articles  •  Same  event</div>
                     <p className="font-editorial text-2xl md:text-3xl text-center leading-snug">
-                        What  actually  changed?
+                        Articles  are  not  endpoints.<br />
+                        They  are  <span className="font-editorial-italic">inputs</span>.
                     </p>
                 </div>
             </div>
@@ -325,11 +326,11 @@ function ChaosToClarity({ progress }) {
                                 filter: `blur(${(1 - timelineProgress) * 8}px)`,
                             }}
                         >
-                            <div className="text-label mb-6">With  Syftly</div>
+                            <div className="text-label mb-6">A  Living  Picture</div>
                             <h2 className="font-editorial text-4xl md:text-5xl lg:text-6xl leading-[1.05] mb-6">
-                                One  story.<br />
-                                <span className="font-editorial-italic">Four</span>  changes.<br />
-                                Complete  clarity.
+                                How  it  began.<br />
+                                How  it  <span className="font-editorial-italic">evolved</span>.<br />
+                                What  remains  uncertain.
                             </h2>
 
                             {/* Understanding box */}
@@ -340,8 +341,8 @@ function ChaosToClarity({ progress }) {
                                 <div className="text-label mb-2">Current  Understanding</div>
                                 <p className="font-editorial text-lg leading-snug">
                                     {activeItems >= 3
-                                        ? "Election  disputed.  Irregularities  confirmed  by  AP."
-                                        : "Building  understanding..."}
+                                        ? "Election  disputed.  Irregularities  now  confirmed."
+                                        : "Weighing  evidence..."}
                                 </p>
                             </div>
                         </div>
@@ -386,11 +387,10 @@ function ChaosToClarity({ progress }) {
                                         >
                                             {/* Node - centered on same axis as track using transform */}
                                             <div
-                                                className={`absolute top-0 w-6 h-6 rounded-full border-2 transition-all duration-700 ${
-                                                    isActive
-                                                        ? 'bg-[var(--color-ink)] border-[var(--color-ink)]'
-                                                        : 'bg-[var(--color-paper)] border-[var(--color-paper-darker)]'
-                                                }`}
+                                                className={`absolute top-0 w-6 h-6 rounded-full border-2 transition-all duration-700 ${isActive
+                                                    ? 'bg-[var(--color-ink)] border-[var(--color-ink)]'
+                                                    : 'bg-[var(--color-paper)] border-[var(--color-paper-darker)]'
+                                                    }`}
                                                 style={{ left: '12px', transform: 'translateX(-50%)' }}
                                             >
                                                 {isActive && (
@@ -437,21 +437,21 @@ function PrinciplesSection({ isVisible }) {
     const principles = [
         {
             number: '01',
-            title: 'Situations,  not  articles',
-            highlight: 'Situations',
-            desc: 'The world unfolds in evolving stories. We track the story itself — not the endless posts about it.',
+            title: 'Evidence,  not  stream',
+            highlight: 'Evidence',
+            desc: 'Instead of treating news as a stream, syftly treats it as evidence. Each new piece of information is weighed against what is already known.',
         },
         {
             number: '02',
-            title: 'Changes,  not  updates',
-            highlight: 'Changes',
-            desc: 'If nothing meaningful shifted, you hear nothing. Silence is a feature, not a bug.',
+            title: 'Continuity,  not  chaos',
+            highlight: 'Continuity',
+            desc: 'Yesterday still matters today. Understanding is cumulative. We restore something quietly lost — the sense that knowledge builds.',
         },
         {
             number: '03',
-            title: 'Understanding,  not  volume',
-            highlight: 'Understanding',
-            desc: 'Reading less is the goal. Being correctly informed is what matters.',
+            title: 'Comprehension,  not  reaction',
+            highlight: 'Comprehension',
+            desc: 'In a world optimized for reaction, syftly is optimized for comprehension. Not faster news. Not louder news. Just clearer.',
         },
     ];
 
@@ -571,11 +571,13 @@ function Landing() {
                             <AnimatedWord delay={580} isVisible={heroVisible}>the</AnimatedWord>{'  '}
                             <AnimatedWord delay={660} isVisible={heroVisible}>noise.</AnimatedWord>{'  '}
                             <br className="hidden md:block" />
-                            <AnimatedWord delay={820} isVisible={heroVisible}>Preserve</AnimatedWord>{'  '}
-                            <AnimatedWord delay={900} isVisible={heroVisible}>understanding.</AnimatedWord>{'  '}
+                            <AnimatedWord delay={820} isVisible={heroVisible}>Maintain</AnimatedWord>{'  '}
+                            <AnimatedWord delay={900} isVisible={heroVisible}>a</AnimatedWord>{'  '}
+                            <AnimatedWord delay={950} isVisible={heroVisible}>shared</AnimatedWord>{'  '}
+                            <AnimatedWord delay={1000} isVisible={heroVisible}>reality.</AnimatedWord>{'  '}
                             <br className="hidden md:block" />
-                            <AnimatedWord delay={1060} isVisible={heroVisible}>Respect</AnimatedWord>{'  '}
-                            <AnimatedWord delay={1140} isVisible={heroVisible}>attention.</AnimatedWord>
+                            <AnimatedWord delay={1160} isVisible={heroVisible}>Respect</AnimatedWord>{'  '}
+                            <AnimatedWord delay={1240} isVisible={heroVisible}>time.</AnimatedWord>
                         </p>
                     </div>
 
@@ -617,19 +619,28 @@ function Landing() {
                             transform: problemVisible ? 'translateX(0)' : 'translateX(-30px)',
                         }}
                     >
-                        The  Problem
+                        What  Went  Wrong
                     </div>
 
                     <h2
-                        className="font-editorial text-4xl md:text-5xl lg:text-6xl leading-[1.1] mb-12 transition-all duration-1000"
+                        className="font-editorial text-4xl md:text-5xl lg:text-6xl leading-[1.1] mb-8 transition-all duration-1000"
                         style={{
                             opacity: problemVisible ? 1 : 0,
                             transform: problemVisible ? 'translateY(0)' : 'translateY(40px)',
                         }}
                     >
-                        You're  <span className="font-editorial-italic">drowning</span>  in  updates<br />
-                        about  things  that  haven't  actually  changed.
+                        Somewhere  along  the  way,  news  stopped  helping  us  <span className="font-editorial-italic">understand</span>  the  world —
                     </h2>
+
+                    <p
+                        className="text-2xl md:text-3xl text-[var(--color-ink-light)] leading-relaxed text-spaced transition-all duration-1000 delay-300"
+                        style={{
+                            opacity: problemVisible ? 1 : 0,
+                            transform: problemVisible ? 'translateY(0)' : 'translateY(30px)',
+                        }}
+                    >
+                        and  started  asking  us  to  keep  up  with  it.
+                    </p>
                 </div>
             </section>
 
@@ -666,34 +677,23 @@ function Landing() {
                     >
                         <div className="bg-[var(--color-paper)] px-10 py-6 shadow-xl border border-[var(--color-paper-darker)] hover-scale">
                             <p className="font-editorial-italic text-xl md:text-2xl lg:text-3xl text-[var(--color-ink)]">
-                                "Did  anything  actually  change?"
+                                Updates  that  don't  update  anything.
                             </p>
                         </div>
                     </div>
                 </div>
 
-                {/* Stats */}
+                {/* Philosophy text */}
                 <div
-                    className="grid grid-cols-3 gap-6 md:gap-12 mt-20 md:mt-28 max-w-4xl mx-auto text-center transition-all duration-1000 delay-800"
+                    className="max-w-3xl mx-auto mt-20 md:mt-28 transition-all duration-1000 delay-800"
                     style={{
                         opacity: noiseVisible ? 1 : 0,
                         transform: noiseVisible ? 'translateY(0)' : 'translateY(50px)',
                     }}
                 >
-                    {[
-                        { value: '90%', label: 'of  updates  repeat  what  you  know' },
-                        { value: '12×', label: 'the  same  story,  different  headline' },
-                        { value: '0', label: 'meaningful  changes' },
-                    ].map((stat, i) => (
-                        <div key={i} className="group cursor-default">
-                            <div className="font-editorial text-5xl md:text-6xl lg:text-7xl mb-4 group-hover:text-[var(--color-accent)] transition-colors duration-300">
-                                {stat.value}
-                            </div>
-                            <div className="text-xs md:text-sm text-[var(--color-ink-muted)] tracking-wide">
-                                {stat.label}
-                            </div>
-                        </div>
-                    ))}
+                    <p className="text-lg md:text-xl text-[var(--color-ink-light)] leading-relaxed text-spaced text-center">
+                        Headlines  repeat  themselves.  Narratives  reset  every  morning.  Urgency  is  manufactured,  attention  is  extracted,  and  <span className="font-editorial-italic text-[var(--color-ink)]">silence</span> — the  most  honest  signal  of  all — is  treated  as  failure.
+                    </p>
                 </div>
             </section>
 
@@ -707,7 +707,7 @@ function Landing() {
                             transform: shiftVisible ? 'translateX(0)' : 'translateX(-30px)',
                         }}
                     >
-                        The  Shift
+                        A  Different  Assumption
                     </div>
 
                     <h2
@@ -717,8 +717,8 @@ function Landing() {
                             transform: shiftVisible ? 'translateY(0)' : 'translateY(40px)',
                         }}
                     >
-                        What  if  news  only  spoke<br />
-                        when  something  <span className="font-editorial-italic">actually</span>  changed?
+                        The  world  does  not  change  every  minute.<br />
+                        Our  understanding  of  it  <span className="font-editorial-italic">shouldn't  either</span>.
                     </h2>
 
                     <p
@@ -728,8 +728,7 @@ function Landing() {
                             transform: shiftVisible ? 'translateY(0)' : 'translateY(30px)',
                         }}
                     >
-                        Syftly  treats  news  as  <span className="font-editorial-italic text-[var(--color-ink)]">evolving  situations</span>,
-                        not  isolated  posts.
+                        Syftly  is  built  around  a  simple  human  need — <span className="font-editorial-italic text-[var(--color-ink)]">to  know  what  is  true  right  now,  and  how  that  truth  came  to  be</span>.
                     </p>
                 </div>
             </section>
@@ -755,7 +754,7 @@ function Landing() {
                             transform: principlesVisible ? 'translateX(0)' : 'translateX(-30px)',
                         }}
                     >
-                        Our  Principles
+                        How  It  Works
                     </div>
 
                     <PrinciplesSection isVisible={principlesVisible} />
@@ -786,7 +785,7 @@ function Landing() {
                             transform: compareVisible ? 'translateY(0)' : 'translateY(40px)',
                         }}
                     >
-                        News  that  <span className="font-editorial-italic">respects</span>  your  time.
+                        This  is  not  about  reading  <span className="font-editorial-italic">less</span>.
                     </h2>
 
                     <p
@@ -796,7 +795,7 @@ function Landing() {
                             transform: compareVisible ? 'translateY(0)' : 'translateY(30px)',
                         }}
                     >
-                        The  old  way  exhausts  you.  The  new  way  enlightens  you.
+                        It's  about  thinking  better.
                     </p>
 
                     <div
@@ -820,10 +819,10 @@ function Landing() {
 
                             <ul className="space-y-7 text-[var(--color-ink-light)] text-spaced">
                                 {[
-                                    { text: '47  notifications  about  the  same  story', sub: 'Endless  noise' },
-                                    { text: 'No  idea  what  actually  changed', sub: 'Zero  clarity' },
-                                    { text: 'Constantly  catching  up,  never  caught  up', sub: 'Exhausting  cycle' },
-                                    { text: 'Reading  10  articles  to  learn  one  thing', sub: 'Wasted  time' },
+                                    { text: 'Urgency  manufactured,  attention  extracted', sub: 'The  business  model' },
+                                    { text: 'Narratives  reset  every  morning', sub: 'No  continuity' },
+                                    { text: 'Knowing  everything,  understanding  nothing', sub: 'Information  without  insight' },
+                                    { text: 'Silence  treated  as  failure', sub: 'Always  on' },
                                 ].map((item, i) => (
                                     <li key={i} className="group">
                                         <div className="flex items-start gap-4">
@@ -840,7 +839,7 @@ function Landing() {
                             {/* Frustration indicator */}
                             <div className="mt-10 pt-6 border-t border-[var(--color-paper-darker)]">
                                 <div className="text-xs uppercase tracking-widest text-[var(--color-ink-muted)] mb-2">Result</div>
-                                <div className="font-editorial-italic text-lg text-[var(--color-ink-muted)]">"I  can't  keep  up."</div>
+                                <div className="font-editorial-italic text-lg text-[var(--color-ink-muted)]">"Informed  yet  overwhelmed."</div>
                             </div>
                         </div>
 
@@ -858,10 +857,10 @@ function Landing() {
 
                             <ul className="space-y-7 text-spaced">
                                 {[
-                                    { text: 'One  update  when  something  actually  matters', sub: 'Signal  only' },
-                                    { text: 'Clear  understanding  of  what  shifted', sub: 'Instant  clarity' },
-                                    { text: 'Silence  when  nothing  changed', sub: 'Peaceful  inbox' },
-                                    { text: 'Ask  questions,  get  answers  with  sources', sub: 'True  understanding' },
+                                    { text: 'Speaks  only  when  something  meaningfully  changes', sub: 'Signal  over  noise' },
+                                    { text: 'Understanding  is  cumulative', sub: 'Yesterday  still  matters' },
+                                    { text: 'A  living  picture  of  the  world', sub: 'Not  a  feed' },
+                                    { text: 'Silence  can  mean  stability,  not  ignorance', sub: 'Peace  of  mind' },
                                 ].map((item, i) => (
                                     <li key={i} className="group">
                                         <div className="flex items-start gap-4">
@@ -878,7 +877,7 @@ function Landing() {
                             {/* Relief indicator */}
                             <div className="mt-10 pt-6 border-t border-[var(--color-paper-darker)]">
                                 <div className="text-xs uppercase tracking-widest text-[var(--color-ink-muted)] mb-2">Result</div>
-                                <div className="font-editorial-italic text-lg text-[var(--color-ink)]">"I  actually  understand."</div>
+                                <div className="font-editorial-italic text-lg text-[var(--color-ink)]">"A  clearer  understanding  of  the  world  we  share."</div>
                             </div>
                         </div>
                     </div>
@@ -910,8 +909,9 @@ function Landing() {
                             transform: closingVisible ? 'translateY(0)' : 'translateY(40px)',
                         }}
                     >
-                        The  <span className="font-editorial-italic">quieter</span>  way<br />
-                        to  stay  informed.
+                        Not  faster  news.<br />
+                        Not  louder  news.<br />
+                        Just  <span className="font-editorial-italic">clearer</span>.
                     </h2>
 
                     {/* Subtext */}
@@ -922,7 +922,7 @@ function Landing() {
                             transform: closingVisible ? 'translateY(0)' : 'translateY(30px)',
                         }}
                     >
-                        Less  reading.  More  understanding.  No  anxiety.
+                        A  clearer  understanding  of  the  world  we  share.
                     </p>
 
                     {/* Countdown block */}
@@ -956,7 +956,7 @@ function Landing() {
 
                         {/* Promise */}
                         <p className="font-editorial-italic text-lg text-[var(--color-ink-light)]">
-                            "Finally,  news  that  knows  when  to  be  quiet."
+                            Optimized  for  comprehension.
                         </p>
                     </div>
 
@@ -984,42 +984,41 @@ function Landing() {
                         <div>
                             <div className="font-editorial text-3xl mb-4 underline-draw inline-block">syftly</div>
                             <p className="text-[var(--color-ink-light)] text-spaced leading-relaxed mb-6">
-                                News  intelligence  that  respects  your  attention.  We  track  situations,  not  headlines.
+                                News intelligence Platform
                             </p>
-                            {/* <div className="text-label">Est.  2025</div> */}
                         </div>
 
-                        {/* Philosophy column */}
+                        {/* What you see column */}
                         <div>
-                            <div className="text-label mb-6">Our  Philosophy</div>
+                            <div className="text-label mb-6">What  You  See</div>
                             <ul className="space-y-3 text-[var(--color-ink-light)] text-spaced">
                                 <li className="flex items-center gap-3">
                                     <span className="w-1 h-1 rounded-full bg-[var(--color-ink-muted)]" />
-                                    Silence  is  a  feature
+                                    How  a  situation  began
                                 </li>
                                 <li className="flex items-center gap-3">
                                     <span className="w-1 h-1 rounded-full bg-[var(--color-ink-muted)]" />
-                                    Understanding  over  volume
+                                    How  it  evolved
                                 </li>
                                 <li className="flex items-center gap-3">
                                     <span className="w-1 h-1 rounded-full bg-[var(--color-ink-muted)]" />
-                                    Situations,  not  articles
+                                    What  changed
                                 </li>
                                 <li className="flex items-center gap-3">
                                     <span className="w-1 h-1 rounded-full bg-[var(--color-ink-muted)]" />
-                                    Changes,  not  updates
+                                    What  remains  uncertain
                                 </li>
                             </ul>
                         </div>
 
                         {/* Quote column */}
                         <div className="paper-layer p-6 md:p-8">
-                            <div className="text-label mb-4">Why  We  Built  This</div>
+                            <div className="text-label mb-4">The  Belief</div>
                             <blockquote className="font-editorial-italic text-lg leading-relaxed text-[var(--color-ink-light)] mb-4">
-                                "We  were  tired  of  being  informed  yet  overwhelmed.  Knowing  everything,  understanding  nothing."
+                                "For  most  of  history,  humans  learned  about  the  world  slowly.  Knowledge  accumulated.  Understanding  deepened."
                             </blockquote>
                             <div className="text-xs text-[var(--color-ink-muted)] uppercase tracking-widest">
-                                —  Ved
+                                We're  returning  to  that.
                             </div>
                         </div>
                     </div>
