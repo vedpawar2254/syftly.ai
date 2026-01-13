@@ -654,8 +654,8 @@ function Landing() {
                             </span>
                             <AnimatedWord delay={1300} isVisible={heroVisible}>.</AnimatedWord>{'  '}
                             <br />
-                            <AnimatedWord delay={1500} isVisible={heroVisible}>Respect</AnimatedWord>{'  '}
-                            <AnimatedWord delay={1600} isVisible={heroVisible}>time.</AnimatedWord>
+                            <AnimatedWord delay={1500} isVisible={heroVisible}>Reimagine</AnimatedWord>{'  '}
+                            <AnimatedWord delay={1600} isVisible={heroVisible}>News.</AnimatedWord>
                         </p>
                     </div>
 
@@ -1156,7 +1156,7 @@ function Landing() {
                         </div>
 
                         <div className="text-sm text-[var(--color-ink-muted)] text-spaced font-editorial-italic">
-                            Cut  the  noise.  Maintain  a  shared  reality.  Respect  time.
+                            Cut  the  noise.  Maintain  a  shared  reality.  Reimagine  News.
                         </div>
                     </div>
                 </div>
