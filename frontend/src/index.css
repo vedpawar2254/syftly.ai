@@ -1,68 +1,307 @@
+/*
+ * syftly.ai Design System
+ * References: style_guide.md
+ *
+ * Philosophy: Editorial, calm, dense with meaning.
+ * Feel: A serious newspaper + modern information design + restraint.
+ */
+
+/* ===================================
+   1. CSS Custom Properties (Tokens)
+   =================================== */
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  /* Colors - Print-first palette */
+  --color-ink: #111111;
+  --color-paper: #FAF9F7;
+  --color-gray: #CFCFCF;
+  --color-gray-light: #E5E5E5;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* Optional accent (very restrained) */
+  --color-accent: #8B4513; /* Muted rust */
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+  /* Typography - Newspaper-inspired */
+  --font-serif: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Font sizes - Modular scale */
+  --text-xs: 0.75rem;    /* 12px */
+  --text-sm: 0.875rem;   /* 14px */
+  --text-base: 1rem;     /* 16px */
+  --text-lg: 1.125rem;   /* 18px */
+  --text-xl: 1.25rem;    /* 20px */
+  --text-2xl: 1.5rem;    /* 24px */
+  --text-3xl: 1.875rem;  /* 30px */
+  --text-4xl: 2.25rem;   /* 36px */
+  --text-5xl: 3rem;      /* 48px */
+  --text-6xl: 3.75rem;   /* 60px */
+
+  /* Line heights */
+  --leading-tight: 1.15;
+  --leading-snug: 1.3;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+
+  /* Spacing - Generous margins */
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+
+  /* Layout */
+  --max-width: 72rem;   /* 1152px */
+  --content-width: 48rem; /* 768px - optimal reading width */
+
+  /* Transitions - Slow, purposeful */
+  --transition-slow: 400ms ease;
+  --transition-medium: 250ms ease;
+  --transition-fast: 150ms ease;
+}
+
+/* ===================================
+   2. Base Styles
+   =================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+  text-rendering: optimizeLegibility;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  padding: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-ink);
+  background-color: var(--color-paper);
   min-height: 100vh;
 }
 
+/* ===================================
+   3. Typography
+   =================================== */
+
+/* Headlines - Large serif, strong contrast */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: var(--leading-tight);
+  margin: 0 0 var(--space-4) 0;
+  color: var(--color-ink);
+}
+
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  font-size: var(--text-5xl);
+  letter-spacing: -0.02em;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+h2 {
+  font-size: var(--text-4xl);
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-size: var(--text-3xl);
+}
+
+h4 {
+  font-size: var(--text-2xl);
+}
+
+h5 {
+  font-size: var(--text-xl);
+}
+
+h6 {
+  font-size: var(--text-lg);
+}
+
+/* Body text */
+p {
+  margin: 0 0 var(--space-4) 0;
+  max-width: var(--content-width);
+}
+
+/* Links - Simple text links */
+a {
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  transition: opacity var(--transition-fast);
+}
+
+a:hover {
+  opacity: 0.7;
+}
+
+/* Small/meta text */
+small,
+.text-meta {
+  font-size: var(--text-sm);
+  color: var(--color-ink);
+  opacity: 0.7;
+}
+
+/* No all-caps paragraphs - but allow for labels */
+.text-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-ink);
+  opacity: 0.6;
+}
+
+/* ===================================
+   4. Layout Utilities
+   =================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+.content {
+  max-width: var(--content-width);
+}
+
+/* Generous section spacing */
+.section {
+  padding: var(--space-16) 0;
+}
+
+.section + .section {
+  padding-top: var(--space-8);
+}
+
+/* ===================================
+   5. UI Elements (Minimal Set)
+   =================================== */
+
+/* Thin dividers */
+.divider {
+  border: none;
+  border-top: 1px solid var(--color-gray);
+  margin: var(--space-8) 0;
+}
+
+.divider--thin {
+  border-top-width: 0.5px;
+}
+
+/* Primary CTA (only one per page) */
+.button-primary {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
   font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  color: var(--color-paper);
+  background-color: var(--color-ink);
+  padding: var(--space-3) var(--space-6);
+  border: none;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  transition: opacity var(--transition-fast);
 }
 
-@media (prefers-color-scheme: light) {
+.button-primary:hover {
+  opacity: 0.85;
+}
+
+/* Text button/link */
+.button-text {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-ink);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ===================================
+   6. Animation (Slow, Purposeful)
+   =================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn var(--transition-slow) ease forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp var(--transition-slow) ease forwards;
+}
+
+/* ===================================
+   7. Responsive
+   =================================== */
+
+@media (max-width: 768px) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    --text-5xl: 2.25rem;
+    --text-4xl: 1.875rem;
+    --text-3xl: 1.5rem;
   }
-  a:hover {
-    color: #747bff;
+
+  .container {
+    padding: 0 var(--space-4);
   }
-  button {
-    background-color: #f9f9f9;
+
+  .section {
+    padding: var(--space-10) 0;
+  }
+}
+
+/* ===================================
+   8. Print Styles
+   =================================== */
+
+@media print {
+  body {
+    background: white;
+  }
+
+  .no-print {
+    display: none !important;
   }
 }
