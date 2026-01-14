@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 
 // ===== CONSTANTS =====
 // Fixed launch date - January 20, 2026 at midnight UTC
-const TARGET_DATE = new Date('2026-01-20T00:00:00Z');
+const TARGET_DATE = new Date('2026-01-21T00:00:00Z');
 
 // ===== HOOKS =====
 function useCountdown(targetDate) {
@@ -687,7 +687,7 @@ function Landing() {
                     }}
                 >
                     <div className="font-editorial text-7xl md:text-8xl lg:text-9xl leading-none">
-                        01
+                        0.1
                     </div>
                 </div>
 
