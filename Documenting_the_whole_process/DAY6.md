@@ -1,4 +1,6 @@
 # DAY 6
 
 - [x] landing page and countown
-- [ ] Start with main backend
+- [ ] Start with main backend ( instead perfected the UX)
+
+
