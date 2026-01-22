@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 // ===== CONSTANTS =====
-// Fixed launch date - January 20, 2026 at midnight UTC
-const TARGET_DATE = new Date('2026-01-21T00:00:00Z');
+// Fixed launch date - January 22, 2026 at midnight UTC
+const TARGET_DATE = new Date('2026-01-23T00:00:00Z');
 
 // ===== HOOKS =====
 function useCountdown(targetDate) {
