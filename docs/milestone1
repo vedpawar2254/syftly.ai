@@ -1,105 +1,90 @@
-- Get news from a set of sources (India specific)
-
-
-flow
-- user types in a topic
-- we go scrape multiple sets of news sources
-- we create a summary and serve it
-- The user can follow that topic
-
-working of the flow
-
-
-experiments
-- we experiment with the data we get from news artcles
-
-# Milestone 1: Basic Evidence Ingestion and Situation Feed
+# Milestone 1: Topic-Based News Ingestion and Situation Feed (India Focus)
 
 ## Overview
-Establish the core data flow for syftly.ai by implementing basic evidence ingestion from news sources and enabling a functional situation feed. This milestone focuses on validating the foundational primitives (Evidence, Situation, Change) with real or mocked data, ensuring the system can ingest news content, cluster it into situations, and display meaningful changes. It aligns with the architecture blueprint's "What to Code First" priorities (Evidence ingestion → Situation creation → Change object creation → Read-only feed) while keeping scope minimal to avoid premature complexity.
+This milestone establishes the foundational flow for syftly.ai: enabling users to type in a topic, automatically scraping multiple India-specific news sources, summarizing the results, and allowing users to follow topics of interest. The goal is to validate the core loop—topic input, evidence ingestion, summarization, and user interaction—while keeping the implementation minimal and focused on the Indian news ecosystem.
+
+## Flow
+1. **User types in a topic** (e.g., "Indian elections", "ISRO launches").
+2. **System scrapes multiple Indian news sources** for articles relevant to the topic.
+3. **Summarization**: The system generates a concise summary of the collected articles.
+4. **Situation Feed**: Summaries and supporting articles are displayed in a user-facing feed.
+5. **Follow Topic**: Users can choose to follow a topic for future updates.
 
 ## Goals
-- Demonstrate end-to-end data flow from external news sources to user-facing feed.
-- Validate the five core primitives in a working system.
-- Provide a foundation for iterative development and testing of change detection logic.
-- Enable basic user interaction with situations and changes (read-only).
+- Demonstrate end-to-end flow from user topic input to a populated situation feed.
+- Validate ingestion, summarization, and basic user interaction (topic following).
+- Focus on India-specific news sources for initial implementation.
 
 ## Objectives
-- **Evidence Ingestion**: Set up polling for 1-2 news sources to fetch and store raw articles as Evidence records.
-- **Situation Matching**: Implement rule-based creation of situations from ingested evidence.
-- **Change Proposal**: Stub in change evaluation logic to simulate meaningful updates.
-- **Feed Functionality**: Ensure frontend/backend can display situations and changes in a simple view.
-- **Documentation**: Populate this file with milestone details and update daily logs.
+- **Topic-Based Ingestion**: Enable user-driven topic search and fetch relevant news articles from Indian sources.
+- **Summarization**: Implement basic summarization (rule-based or extractive) for grouped articles.
+- **Situation Feed**: Display summaries and articles in a simple, readable feed.
+- **Follow Feature**: Allow users to follow topics (store followed topics per user/session).
+- **Documentation**: Update this file with milestone details and daily progress.
 
 ## Scope and Limitations
-- **In Scope**: Ingestion of ~10-20 articles, creation of 2-3 situations, simulation of 1-2 changes. Basic rule-based heuristics for situation clustering (e.g., keyword matching). Simple list/timeline view for feed. No AI/LLM integration, user authentication, complex UI (e.g., chat), or production-ready error handling.
-- **Out of Scope**: Full AI for interpretation/projection, multiple sources, advanced clustering, user auth, mobile support, social features, monetization, or performance optimizations.
-- **Constraints**: Use existing schemas and routes; prioritize simplicity over sophistication. Estimated effort: 1-2 weeks for a solo developer.
+- **In Scope**: Ingestion from 2-3 major Indian news sources (e.g., The Hindu, Times of India, Indian Express), basic keyword/topic matching, simple summarization, minimal UI for feed and follow.
+- **Out of Scope**: AI/LLM-based summarization, advanced clustering, user authentication, notifications, production-grade error handling, or mobile support.
+- **Constraints**: Use existing schemas where possible; keep logic simple and modular for future expansion.
 
 ## Technical Implementation
+
 ### Backend Tasks
-1. **Evidence Ingestion Service**:
-   - Add a new service (`/backend/services/evidenceIngestion.js`) to poll RSS feeds from selected sources (e.g., Reuters World News or BBC News).
-   - Fetch articles using a library like `rss-parser` (add to package.json if needed).
-   - Store as Evidence records: title, body, source, url, publishDate, fetchedAt.
-   - Schedule periodic runs (e.g., every 15-30 minutes) using `node-cron`.
-   - Handle duplicates (e.g., by URL hash) and basic error handling.
+1. **News Scraper Service**:
+   - Create `/backend/services/newsScraper.js` to fetch articles from Indian news sources based on user topic.
+   - Use RSS feeds or web scraping (e.g., `rss-parser`, `axios`, `cheerio`).
+   - Store articles as Evidence: title, body, source, url, publishDate, fetchedAt, matchedTopic.
+   - Deduplicate by URL or title.
 
-2. **Situation Creation Logic**:
-   - Extend situation service (`/backend/services/situationService.js`) to process new Evidence.
-   - Implement basic clustering: Group Evidence by keywords/topics (e.g., extract entities like "Venezuela", "election" and match to existing situations or create new ones).
-   - For new situations: Initialize with summary, status ("active"), confidence (0.5), keyFacts, and link to Evidence.
-   - Update existing situations: Append new Evidence if relevant.
+2. **Summarization Logic**:
+   - Implement a basic summarizer (e.g., extractive: top sentences, or keyword-based summary).
+   - Group articles by topic and generate a summary for each group.
 
-3. **Change Evaluation Stub**:
-   - Create a change service (`/backend/services/changeService.js`) to propose changes.
-   - For now, implement simple rules: If new Evidence significantly alters keyFacts (e.g., adds new actors), create a Change record with before/after states and reasoning ("New evidence suggests...").
-   - Store changes append-only; simulate 1-2 fake changes for testing.
-
-4. **API Enhancements**:
-   - Update routes (`/backend/routes/situations.js`, `/backend/routes/feed.js`) to support querying situations with changes and associated Evidence.
-   - Add endpoints for feed: e.g., GET `/api/feed` returning list of active situations with recent changes.
+3. **Situation Feed API**:
+   - Add `/backend/routes/feed.js` endpoint: GET `/api/feed?topic=...` returns summaries and articles for a topic.
+   - Add POST `/api/follow` to store followed topics (per user/session).
 
 ### Frontend Tasks
-1. **Feed Page**:
-   - Create a new page (`/frontend/src/pages/Feed.jsx`) for the situation feed.
-   - Display situations as a list or simple timeline: Show summary, status, confidence, recent changes, and linked Evidence (e.g., as clickable titles).
-   - Use existing UI components from `/frontend/src/components/ui/` for layout.
+1. **Topic Search UI**:
+   - Add input for users to type a topic (e.g., `/frontend/src/pages/Feed.jsx`).
+   - Trigger backend fetch on submit.
 
-2. **API Integration**:
-   - Update services (`/frontend/src/services/api.js`) to fetch from new feed endpoints.
-   - Add hooks (`/frontend/src/hooks/useFeed.js`) for data fetching and state management.
+2. **Feed Display**:
+   - Show summaries and supporting articles in a list/timeline.
+   - Allow users to click to view full articles.
 
-3. **Navigation Updates**:
-   - Update routing in `App.jsx` to include the feed page (e.g., `/feed`).
-   - Modify landing page if needed to link to feed after ingestion.
+3. **Follow Button**:
+   - Add a button to follow the current topic; persist in frontend state and backend.
+
+4. **Navigation**:
+   - Update routing to include the feed and followed topics.
 
 ### Infrastructure and Testing
-- **Database**: Ensure MongoDB is set up; use existing models. Populate with initial Evidence/Situations for testing.
-- **Testing**: Add basic unit tests for new services (e.g., using Jest if configured). Manually test data flow.
-- **Linting/Typecheck**: Run `npm run lint` and `npm run typecheck` in both backend and frontend after changes.
+- **Database**: Use MongoDB for storing Evidence, summaries, and followed topics.
+- **Testing**: Add basic unit tests for scraper and summarizer. Manual end-to-end test of the flow.
+- **Linting/Typecheck**: Run `npm run lint` and `npm run typecheck` in both backend and frontend.
 - **Environment**: Use dev configs; avoid production secrets.
 
 ## Deliverables
-- Working API endpoints for feed and situations.
-- Frontend feed page displaying ingested data.
-- 10-20 ingested articles, 2-3 situations, 1-2 simulated changes.
+- Working topic-based news ingestion and summarization flow.
+- Feed page displaying summaries and articles for user-entered topics.
+- Follow feature for topics.
+- Ingestion from at least 2 Indian news sources.
 - Updated docs/milestone1 with this content.
 - Daily log entry summarizing completion and learnings.
-- Commit message: "feat: Implement Milestone 1 - Basic Evidence Ingestion and Situation Feed"
+- Commit message: "feat: Implement Milestone 1 - Topic-Based News Ingestion and Situation Feed (India)"
 
 ## Success Criteria
-- System can ingest news from sources and store as Evidence.
-- Situations are created/clustered from Evidence.
-- Changes are proposed and linked to situations.
-- Users can view a feed of situations with changes and sources via frontend.
-- No critical bugs; data flow is reliable for small-scale testing.
+- User can enter a topic and see a feed of summarized news from Indian sources.
+- Summaries and articles are grouped by topic.
+- User can follow a topic for future updates.
+- No critical bugs; flow works reliably for small-scale testing.
 
 ## Next Steps (Post-Milestone)
-- Refine change detection with heuristics or AI.
-- Expand to more sources and complex clustering.
-- Add chat interface and timelines.
-- Iterate based on user feedback.
+- Improve summarization with AI/LLM.
+- Expand to more sources and languages.
+- Add notifications and richer user profiles.
+- Iterate UI/UX based on feedback.
 
 ## Rationale
-This milestone establishes the core loop without over-engineering, allowing early validation of the situation-focused model. It addresses the gap between implemented schemas and functional intelligence, providing a tangible demo while following the PRD's MVP principles. By starting small, we can test assumptions (e.g., situation clustering) and pivot before investing in AI layers.
+This milestone delivers a tangible, India-focused demo of syftly.ai's core value: surfacing and summarizing news situations by topic. It validates the ingestion and summarization loop, sets up the foundation for more advanced features, and ensures early feedback from real user flows.
