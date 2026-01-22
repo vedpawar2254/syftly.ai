@@ -6,8 +6,8 @@ This milestone establishes the foundational flow for syftly.ai: enabling users t
 ## Flow
 1. **User types in a topic** (e.g., "Indian elections", "ISRO launches").
 2. **System scrapes multiple Indian news sources** for articles relevant to the topic.
-3. **Summarization**: The system generates a concise summary of the collected articles.
-4. **Situation Feed**: Summaries and supporting articles are displayed in a user-facing feed.
+3. **Synthesis & Summarization**: The system synthesizes all collected articles into ONE unified summary that captures the key points, trends, and perspectives from across sources.
+4. **Situation Feed**: The synthesized summary and supporting articles are displayed in a user-facing feed.
 5. **Follow Topic**: Users can choose to follow a topic for future updates.
 
 ## Goals
@@ -17,51 +17,104 @@ This milestone establishes the foundational flow for syftly.ai: enabling users t
 
 ## Objectives
 - **Topic-Based Ingestion**: Enable user-driven topic search and fetch relevant news articles from Indian sources.
-- **Summarization**: Implement basic summarization (rule-based or extractive) for grouped articles.
-- **Situation Feed**: Display summaries and articles in a simple, readable feed.
+- **Multi-Article Synthesis**: Implement logic to synthesize multiple articles on the same topic into ONE coherent summary that captures key information from across sources.
+- **Situation Feed**: Display the synthesized summary and source articles in a simple, readable feed.
 - **Follow Feature**: Allow users to follow topics (store followed topics per user/session).
 - **Documentation**: Update this file with milestone details and daily progress.
 
 ## Scope and Limitations
-- **In Scope**: Ingestion from 2-3 major Indian news sources (e.g., The Hindu, Times of India, Indian Express), basic keyword/topic matching, simple summarization, minimal UI for feed and follow.
-- **Out of Scope**: AI/LLM-based summarization, advanced clustering, user authentication, notifications, production-grade error handling, or mobile support.
-- **Constraints**: Use existing schemas where possible; keep logic simple and modular for future expansion.
+- **In Scope**: Ingestion from 2-3 major Indian news sources (e.g., The Hindu, Times of India, Indian Express), case-insensitive keyword matching, extractive-based synthesis of multiple articles into one summary, minimal UI for feed and follow.
+- **Out of Scope**: AI/LLM-based summarization, advanced semantic clustering, user authentication, notifications, production-grade error handling, or mobile support.
+- **Constraints**: Use existing schemas where possible; keep synthesis logic simple and modular for future LLM integration.
+
+## Pre-Milestone Validation Tasks
+Before implementation begins, complete these validation steps:
+
+1. **Source RSS Verification** (CRITICAL)
+   - Test RSS feed URLs for The Hindu, Times of India, Indian Express
+   - Verify feeds are accessible without authentication
+   - Check feed structure (items, title, link, pubDate, description/content)
+   - Document findings in `backend/config/sources.md`
+
+2. **Topic Matching Sandbox Test**
+   - Manually test topic matching logic on sample articles
+   - Validate edge cases: capitalization, partial matches, multi-word topics
+   - Confirm false positive/negative rates are acceptable
+
+3. **Synthesis Algorithm Prototype**
+   - Build a quick prototype using sample articles
+   - Verify summary length and coherence
+   - Test duplicate removal logic
 
 ## Technical Implementation
 
 ### Backend Tasks
 1. **News Scraper Service**:
-   - Create `/backend/services/newsScraper.js` to fetch articles from Indian news sources based on user topic.
-   - Use RSS feeds or web scraping (e.g., `rss-parser`, `axios`, `cheerio`).
-   - Store articles as Evidence: title, body, source, url, publishDate, fetchedAt, matchedTopic.
-   - Deduplicate by URL or title.
+    - Create `/backend/services/newsScraper.js` to fetch articles from Indian news sources based on user topic.
+    - Use RSS feeds where available (preferred), or web scraping (e.g., `rss-parser`, `axios`, `cheerio`) as fallback.
+    - **Source Configuration**: Configure source URLs in `backend/config/sources.js`:
+      ```js
+      module.exports = [
+        { name: 'The Hindu', type: 'rss', url: 'https://www.thehindu.com/news/national/?service=rss' },
+        { name: 'Times of India', type: 'rss', url: 'https://timesofindia.indiatimes.com/rssfeeds/296589292.cms' },
+        { name: 'Indian Express', type: 'rss', url: 'https://indianexpress.com/section/india/feed/' }
+      ];
+      ```
+    - Store articles as Evidence: title, body, source, url, publishDate, fetchedAt, matchedTopic.
+    - Deduplicate by URL and content hash (to catch syndicated articles).
 
-2. **Summarization Logic**:
-   - Implement a basic summarizer (e.g., extractive: top sentences, or keyword-based summary).
-   - Group articles by topic and generate a summary for each group.
+2. **Topic Matching Logic**:
+    - Implement case-insensitive keyword matching: `article.title.toLowerCase().includes(topic) || article.body.toLowerCase().includes(topic)`
+    - Prioritize articles where topic appears in title (higher relevance).
+    - Limit results to top 20-30 most relevant articles (sorted by publishDate desc, then title-match priority).
+    - Pre-process user topic: trim whitespace, convert to lowercase.
 
-3. **Situation Feed API**:
-   - Add `/backend/routes/feed.js` endpoint: GET `/api/feed?topic=...` returns summaries and articles for a topic.
-   - Add POST `/api/follow` to store followed topics (per user/session).
+3. **Synthesis Logic**:
+    - Implement a multi-article synthesizer that combines content from all fetched articles into ONE unified summary.
+    - **Algorithm**:
+      1. Sort articles by relevance (title match > publishDate recency).
+      2. Extract first 1-2 sentences from each article (or first paragraph).
+      3. Combine extracted sentences with source attribution markers: "[The Hindu] First sentence... [Times of India] First sentence..."
+      4. Remove duplicate or near-duplicate sentences using similarity threshold (>80% overlap).
+      5. Limit final summary to 150-300 words.
+    - Store result in `Summary` collection: { topic, summaryText, sourceCount, articleIds[], createdAt, updatedAt }
+
+4. **Situation Feed API**:
+    - Add `/backend/routes/feed.js` endpoint: GET `/api/feed?topic=...` returns ONE synthesized summary and a list of supporting articles for the topic.
+    - Add POST `/api/follow` to store followed topics (per user/session).
 
 ### Frontend Tasks
 1. **Topic Search UI**:
-   - Add input for users to type a topic (e.g., `/frontend/src/pages/Feed.jsx`).
-   - Trigger backend fetch on submit.
+    - Add input field for users to type a topic (e.g., `/frontend/src/pages/Feed.jsx`).
+    - Add submit button to trigger backend fetch.
+    - Show loading state while fetching and synthesizing.
 
 2. **Feed Display**:
-   - Show summaries and supporting articles in a list/timeline.
-   - Allow users to click to view full articles.
+    - Show ONE synthesized summary in a prominent card at the top with:
+      - Topic title (user-entered)
+      - Summary text (150-300 words)
+      - Source count (e.g., "Synthesized from 4 sources")
+      - Last updated timestamp
+    - Display supporting articles below in a list with:
+      - Source logo/name
+      - Article title (linked to original URL)
+      - Publish date/time
+    - Allow users to expand/collapse the article list.
 
 3. **Follow Button**:
-   - Add a button to follow the current topic; persist in frontend state and backend.
+    - Add a "Follow [Topic]" button that toggles to "Following".
+    - Persist followed topics in localStorage (session) and sync with backend (POST `/api/follow`).
+    - Show a list of followed topics in sidebar or dropdown.
 
 4. **Navigation**:
-   - Update routing to include the feed and followed topics.
+    - Update routing to include `/feed` (main feed page) and `/feed/:topic` (specific topic view).
+    - Add navigation for accessing followed topics.
 
 ### Infrastructure and Testing
-- **Database**: Use MongoDB for storing Evidence, summaries, and followed topics.
-- **Testing**: Add basic unit tests for scraper and summarizer. Manual end-to-end test of the flow.
+- **Database**: Use MongoDB for storing Evidence, Summaries (synthesized summaries per topic), and followed topics.
+- **Schema Extensions**:
+  - `Summary` collection: { topic, summaryText, sourceCount, articleIds[], createdAt, updatedAt }
+- **Testing**: Add basic unit tests for scraper and synthesizer. Manual end-to-end test of the flow.
 - **Linting/Typecheck**: Run `npm run lint` and `npm run typecheck` in both backend and frontend.
 - **Environment**: Use dev configs; avoid production secrets.
 
@@ -75,16 +128,70 @@ This milestone establishes the foundational flow for syftly.ai: enabling users t
 - Commit message: "feat: Implement Milestone 1 - Topic-Based News Ingestion and Situation Feed (India)"
 
 ## Success Criteria
-- User can enter a topic and see a feed of summarized news from Indian sources.
-- Summaries and articles are grouped by topic.
+- User can enter a topic and see ONE synthesized summary that captures information from multiple articles across Indian sources.
+- The synthesized summary includes key points from at least 2 different sources.
+- Supporting articles are displayed with clear source attribution.
 - User can follow a topic for future updates.
-- No critical bugs; flow works reliably for small-scale testing.
+- End-to-end flow completes within 10 seconds for a topic.
+- Common topics (e.g., "elections", "cricket") return 5+ articles for synthesis.
 
 ## Next Steps (Post-Milestone)
-- Improve summarization with AI/LLM.
-- Expand to more sources and languages.
+- Enhance synthesis with AI/LLM for better abstraction and contradiction handling.
+- Implement semantic topic matching (beyond simple keyword matching).
+- Expand to more sources, regional languages, and international coverage.
+- Add article clustering for sub-topics within a main topic (e.g., "elections" → "results", "candidates", "voter turnout").
 - Add notifications and richer user profiles.
-- Iterate UI/UX based on feedback.
+- Iterate UI/UX based on user feedback.
 
 ## Rationale
-This milestone delivers a tangible, India-focused demo of syftly.ai's core value: surfacing and summarizing news situations by topic. It validates the ingestion and summarization loop, sets up the foundation for more advanced features, and ensures early feedback from real user flows.
+This milestone delivers a tangible, India-focused demo of syftly.ai's core value: surfacing and synthesizing news situations by topic. It validates the ingestion and synthesis loop, sets up the foundation for more advanced features, and ensures early feedback from real user flows.
+
+## Assumptions
+- Selected news sources provide public RSS feeds or allow web scraping without authentication.
+- User topics will be single-keyword or short phrases (e.g., "ISRO", "elections", not complex natural language queries).
+- Topic matching will use case-insensitive string matching (e.g., article title/body contains the topic keyword).
+- Dev environment has internet access for fetching articles in real-time.
+- A minimum of 2 articles per topic is required to generate a meaningful synthesized summary.
+
+## Edge Cases
+- **Zero articles found**: Display "No articles found for [topic]. Try a different keyword or check the spelling."
+- **Single article found**: Display the article directly with a note: "Only one article found for this topic. Showing original article instead of summary."
+- **Source timeout/unavailable**: Skip failed sources, proceed with successful ones, and display partial results with a note: "Data from X of Y sources."
+- **Duplicate content**: If multiple articles have identical content (syndication), store once with multiple source attributions.
+
+## Quality Metrics
+- At least 2 news sources successfully ingested for any given topic.
+- Common topics (e.g., "elections", "cricket", "budget") return 5+ articles.
+- Synthesized summary length: 150-300 words.
+- End-to-end flow completion: under 10 seconds for typical topics.
+- Summary includes content from at least 2 different sources (to ensure multi-source synthesis).
+
+## Daily Progress Log
+
+### [Date] - Status: [In Progress | Completed | Blocked]
+**Work Completed:**
+- [Description of tasks completed today]
+
+**Challenges/Blockers:**
+- [Any issues encountered]
+
+**Learnings:**
+- [Key insights or discoveries]
+
+**Next Steps:**
+- [Planned work for tomorrow]
+
+---
+
+### [Date] - Status: [Not Started]
+**Work Completed:**
+- [Description of tasks completed today]
+
+**Challenges/Blockers:**
+- [Any issues encountered]
+
+**Learnings:**
+- [Key insights or discoveries]
+
+**Next Steps:**
+- [Planned work for tomorrow]
