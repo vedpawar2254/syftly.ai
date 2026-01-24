@@ -1,8 +1,11 @@
 /**
  * Feed Service
  * Business logic for generating feed items
- * Currently returns mock data - will be replaced with real implementation
+ * Includes LangGraph workflow integration for topic-based news synthesis
  */
+
+import { TopicSummary, FollowedTopic } from '../models/index.js';
+import { Evidence } from '../models/index.js';
 
 /**
  * Mock feed data following CLAUDE.md FeedItem spec
@@ -44,4 +47,179 @@ export const getFeedItems = async () => {
     return mockFeedItems;
 };
 
-export default { getFeedItems };
+/**
+ * Generate news synthesis for a given topic using LangGraph
+ * @param {string} topic - The topic to search and synthesize
+ * @returns {Promise<Object>} Synthesized result with summary and articles
+ */
+export const getTopicSynthesis = async (topic) => {
+    try {
+        // Import LangGraph workflow
+        const { executeNewsGraph } = await import('../graph/newsGraph.js');
+        
+        // Execute the workflow
+        const result = await executeNewsGraph(topic);
+        
+        // Store articles as Evidence if they don't exist
+        const articleIds = [];
+        for (const article of result.articles) {
+            // Try to find existing evidence by URL
+            let evidence = await Evidence.findOne({ 'source.url': article.url });
+            
+            if (!evidence) {
+                // Create new evidence
+                evidence = new Evidence({
+                    source: {
+                        type: 'news',
+                        publisher: article.source,
+                        url: article.url
+                    },
+                    observed_at: article.publishDate,
+                    ingested_at: new Date(),
+                    raw_content: {
+                        title: article.title,
+                        body: article.content
+                    },
+                    metadata: {
+                        language: 'en',
+                        region: 'india'
+                    }
+                });
+                await evidence.save();
+            }
+            articleIds.push(evidence._id);
+        }
+        
+        // Store the summary in database
+        if (result.summary && !result.error) {
+            const wordCount = result.summary.split(/\s+/).length;
+            
+            const topicSummary = new TopicSummary({
+                topic: result.topic,
+                summaryText: result.summary,
+                sourcesUsed: result.sources,
+                articleIds,
+                articleData: result.articles,
+                wordCount
+            });
+            
+            await topicSummary.save();
+        }
+        
+        // Transform the result for the API response
+        return {
+            topic: result.topic,
+            summary: result.summary,
+            articles: result.articles,
+            sources: result.sources,
+            articleCount: result.articles.length,
+            sourceCount: result.sources.length,
+            error: result.error,
+            timestamp: new Date().toISOString()
+        };
+    } catch (error) {
+        console.error('Feed service error:', error);
+        throw new Error(`Failed to generate synthesis: ${error.message}`);
+    }
+};
+
+/**
+ * Store a followed topic in database
+ * @param {string} topic - The topic to follow
+ * @param {string} sessionId - User session identifier
+ * @returns {Promise<Object>} Confirmation with topic and timestamp
+ */
+export const followTopic = async (topic, sessionId = 'default') => {
+    try {
+        // Check if already following
+        const existing = await FollowedTopic.findOne({
+            topic,
+            sessionId,
+            isActive: true
+        });
+        
+        if (existing) {
+            return {
+                success: true,
+                message: `Already following "${topic}"`,
+                topic: existing
+            };
+        }
+        
+        // Create new followed topic
+        const followedTopic = new FollowedTopic({
+            topic,
+            sessionId
+        });
+        
+        await followedTopic.save();
+        
+        return {
+            success: true,
+            message: `Now following "${topic}"`,
+            topic: followedTopic
+        };
+    } catch (error) {
+        console.error('Follow topic error:', error);
+        throw new Error(`Failed to follow topic: ${error.message}`);
+    }
+};
+
+/**
+ * Get all followed topics for a session
+ * @param {string} sessionId - User session identifier
+ * @returns {Promise<Array>} Array of followed topics
+ */
+export const getFollowedTopics = async (sessionId = 'default') => {
+    try {
+        const topics = await FollowedTopic.find({
+            sessionId,
+            isActive: true
+        }).sort({ createdAt: -1 });
+        
+        return topics;
+    } catch (error) {
+        console.error('Get followed topics error:', error);
+        throw new Error(`Failed to get followed topics: ${error.message}`);
+    }
+};
+
+/**
+ * Unfollow a topic
+ * @param {string} topic - The topic to unfollow
+ * @param {string} sessionId - User session identifier
+ * @returns {Promise<Object>} Confirmation
+ */
+export const unfollowTopic = async (topic, sessionId = 'default') => {
+    try {
+        const result = await FollowedTopic.findOneAndUpdate(
+            { topic, sessionId },
+            { isActive: false },
+            { new: true }
+        );
+        
+        if (!result) {
+            return {
+                success: false,
+                message: `Topic "${topic}" not found`
+            };
+        }
+        
+        return {
+            success: true,
+            message: `Unfollowed "${topic}"`,
+            topic: result
+        };
+    } catch (error) {
+        console.error('Unfollow topic error:', error);
+        throw new Error(`Failed to unfollow topic: ${error.message}`);
+    }
+};
+
+export default {
+    getFeedItems,
+    getTopicSynthesis,
+    followTopic,
+    getFollowedTopics,
+    unfollowTopic
+};
