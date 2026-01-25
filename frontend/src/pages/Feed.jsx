@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -10,7 +10,6 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
  * Users can search for topics and get AI-synthesized summaries.
  */
 function Feed() {
-  const [topic, setTopic] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -19,13 +18,15 @@ function Feed() {
   const [followedTopics, setFollowedTopics] = useState([]);
 
   // Generate a session ID for localStorage
-  const sessionId = localStorage.getItem('sessionId') || 
-                    Date.now().toString(36) + Math.random().toString(36).substr(2);
+  const sessionId = useMemo(() => {
+    return localStorage.getItem('sessionId') || 
+           Date.now().toString(36) + Math.random().toString(36).substr(2);
+  }, []);
   
   useEffect(() => {
     localStorage.setItem('sessionId', sessionId);
     loadFollowedTopics();
-  }, []);
+  }, [sessionId]);
 
   /**
    * Load followed topics from localStorage
