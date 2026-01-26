@@ -10,14 +10,16 @@ const topicSummarySchema = new mongoose.Schema(
         topic: {
             type: String,
             required: true,
+            unique: true,
             index: true
         },
 
         summaryText: {
             type: String,
             required: true,
-            // 200-300 words target, ~1500-2000 characters
-            maxlength: 3000
+            // 150-300 words target, ~1000-2000 characters
+            minlength: 50,
+            maxlength: 2000
         },
 
         sourcesUsed: [{
@@ -38,7 +40,11 @@ const topicSummarySchema = new mongoose.Schema(
             publishDate: Date
         }],
 
-        // Metadata
+        sourceCount: {
+            type: Number,
+            default: 0
+        },
+
         wordCount: {
             type: Number,
             default: 0
@@ -48,6 +54,11 @@ const topicSummarySchema = new mongoose.Schema(
             type: Date,
             default: Date.now,
             index: true
+        },
+
+        updatedAt: {
+            type: Date,
+            default: Date.now
         },
 
         expiresAt: {
@@ -69,6 +80,42 @@ topicSummarySchema.index({ topic: 1, createdAt: -1 });
 
 // TTL index for automatic cleanup of expired summaries
 topicSummarySchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+
+// Middleware to update updatedAt timestamp
+topicSummarySchema.pre('save', function(next) {
+    this.updatedAt = Date.now();
+    next();
+});
+
+topicSummarySchema.pre('findOneAndUpdate', function(next) {
+    this.set({ updatedAt: Date.now() });
+    next();
+});
+
+/**
+ * Instance method to update summary with new data
+ */
+topicSummarySchema.methods.updateSummary = function(summaryText, sourcesUsed, articleData) {
+    this.summaryText = summaryText;
+    this.sourcesUsed = sourcesUsed;
+    this.articleData = articleData;
+    this.sourceCount = sourcesUsed.length;
+    this.wordCount = summaryText.split(/\s+/).length;
+    this.updatedAt = new Date();
+    return this.save();
+};
+
+/**
+ * Static method to find or create summary for a topic
+ */
+topicSummarySchema.statics.findOrCreate = async function(topic) {
+    let summary = await this.findOne({ topic });
+    if (!summary) {
+        summary = new this({ topic });
+        await summary.save();
+    }
+    return summary;
+};
 
 const TopicSummary = mongoose.model('TopicSummary', topicSummarySchema);
 

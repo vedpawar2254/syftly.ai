@@ -1,64 +1,67 @@
 import mongoose from 'mongoose';
+import crypto from 'crypto';
 
 /**
  * Evidence Schema
- * Immutable, append-only foundation
- * References: arch.md section 4.1
+ * Stores news articles from RSS feeds
+ * Part of Milestone 1: Topic-Based News Ingestion
  */
 const evidenceSchema = new mongoose.Schema(
     {
-        source: {
-            type: {
-                type: String,
-                enum: ['news', 'blog', 'gov', 'social'],
-                required: true,
-            },
-            publisher: {
-                type: String,
-                required: true,
-            },
-            url: {
-                type: String,
-                required: true,
-            },
-        },
-
-        observed_at: {
-            type: Date,
+        title: {
+            type: String,
             required: true,
+            trim: true
         },
 
-        ingested_at: {
+        body: {
+            type: String,
+            required: true
+        },
+
+        source: {
+            type: String,
+            required: true,
+            enum: ['The Hindu', 'Times of India', 'Indian Express'],
+            index: true
+        },
+
+        url: {
+            type: String,
+            required: true,
+            unique: true
+        },
+
+        publishDate: {
             type: Date,
             default: Date.now,
+            index: true
         },
 
-        raw_content: {
-            title: {
-                type: String,
-                required: true,
-            },
-            body: {
-                type: String,
-                required: true,
-            },
+        fetchedAt: {
+            type: Date,
+            default: Date.now
         },
 
-        metadata: {
-            language: {
-                type: String,
-                default: 'en',
-            },
-            region: {
-                type: String,
-                default: 'global',
-            },
+        topic: {
+            type: String,
+            index: true
         },
+
+        // Content hash for duplicate detection
+        contentHash: {
+            type: String,
+            index: true
+        }
     },
     {
-        timestamps: false, // We handle timestamps manually
+        timestamps: false
     }
 );
+
+// Indexes for efficient querying
+evidenceSchema.index({ url: 1 }, { unique: true });
+evidenceSchema.index({ topic: 1, publishDate: -1 });
 
 // Prevent updates - Evidence is immutable
 evidenceSchema.pre('findOneAndUpdate', function () {
@@ -69,10 +72,35 @@ evidenceSchema.pre('updateOne', function () {
     throw new Error('Evidence documents are immutable and cannot be updated');
 });
 
-// Index for efficient querying
-evidenceSchema.index({ 'source.publisher': 1 });
-evidenceSchema.index({ observed_at: -1 });
-evidenceSchema.index({ ingested_at: -1 });
+/**
+ * Static method to generate content hash
+ */
+evidenceSchema.statics.generateHash = function(content) {
+    return crypto
+        .createHash('sha256')
+        .update(content)
+        .digest('hex');
+};
+
+/**
+ * Instance method to check if this evidence is a duplicate
+ */
+evidenceSchema.methods.isDuplicate = async function() {
+    const Evidence = this.constructor;
+    return await Evidence.findOne({ contentHash: this.contentHash });
+};
+
+/**
+ * Static method to check for duplicates before creating
+ */
+evidenceSchema.statics.checkDuplicate = async function(url, contentHash) {
+    return await this.findOne({
+        $or: [
+            { url: url },
+            { contentHash: contentHash }
+        ]
+    });
+};
 
 const Evidence = mongoose.model('Evidence', evidenceSchema);
 
