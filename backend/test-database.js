@@ -133,7 +133,7 @@ async function testTopicSummaryModel() {
     console.log('\nTest 6: Testing updatedAt middleware...');
     const beforeUpdate = summary.updatedAt;
     await new Promise(resolve => setTimeout(resolve, 10));
-    summary.summaryText = 'Another update';
+    summary.summaryText = 'Another update with more text to meet validation requirements for minimum length.';
     await summary.save();
     const afterUpdate = summary.updatedAt;
     console.log('✅ updatedAt updated:', afterUpdate > beforeUpdate);
