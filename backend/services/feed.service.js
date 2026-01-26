@@ -5,7 +5,7 @@
  */
 
 import { TopicSummary, FollowedTopic } from '../models/index.js';
-import { Evidence } from '../models/index.js';
+import Evidence from '../models/evidence.js';
 
 /**
  * Mock feed data following CLAUDE.md FeedItem spec
@@ -67,16 +67,14 @@ export const getTopicSynthesis = async (topic) => {
             let evidence = await Evidence.findOne({ url: article.url });
             
             if (!evidence) {
+                // Validate article data before creating
+                if (!article.title || !article.content || !article.url) {
+                    console.error('Skipping invalid article (missing required fields)');
+                    continue;
+                }
+                
                 // Create new evidence
                 console.log('Creating Evidence with fields:', {
-                    title: article.title,
-                    body: article.content,
-                    source: article.source,
-                    url: article.url,
-                    publishDate: article.publishDate
-                });
-                
-                evidence = new Evidence({
                     title: article.title,
                     body: article.content,
                     source: article.source,
@@ -84,7 +82,17 @@ export const getTopicSynthesis = async (topic) => {
                     publishDate: article.publishDate,
                     fetchedAt: new Date()
                 });
-                await evidence.save();
+                
+                const newEvidence = new Evidence({
+                    title: article.title,
+                    body: article.content,
+                    source: article.source,
+                    url: article.url,
+                    publishDate: article.publishDate,
+                    fetchedAt: new Date()
+                });
+                await newEvidence.save();
+                console.log('Evidence saved successfully');
             } else {
                 console.log('Evidence already exists, skipping');
             }
@@ -92,7 +100,7 @@ export const getTopicSynthesis = async (topic) => {
         }
         
         // Store the summary in database
-        if (result.summary && !result.error) {
+        if (result.summary && !result.error && result.summary.length >= 50) {
             const wordCount = result.summary.split(/\s+/).length;
             
             const topicSummary = new TopicSummary({
@@ -105,6 +113,8 @@ export const getTopicSynthesis = async (topic) => {
             });
             
             await topicSummary.save();
+        } else if (result.summary && result.summary.length < 50) {
+            console.warn(`Summary for topic "${result.topic}" is too short (${result.summary.length} chars), skipping database save`);
         }
         
         // Transform the result for the API response

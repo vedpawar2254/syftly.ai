@@ -76,6 +76,7 @@ evidenceSchema.pre('updateOne', function () {
  * Static method to generate content hash
  */
 evidenceSchema.statics.generateHash = function(content) {
+    if (!content) return null;
     return crypto
         .createHash('sha256')
         .update(content)
