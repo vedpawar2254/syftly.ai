@@ -62,12 +62,20 @@ export const getTopicSynthesis = async (topic) => {
         
         // Store articles as Evidence if they don't exist
         const articleIds = [];
-        for (const article of result.articles) {
+         for (const article of result.articles) {
             // Try to find existing evidence by URL
             let evidence = await Evidence.findOne({ url: article.url });
             
             if (!evidence) {
                 // Create new evidence
+                console.log('Creating Evidence with fields:', {
+                    title: article.title,
+                    body: article.content,
+                    source: article.source,
+                    url: article.url,
+                    publishDate: article.publishDate
+                });
+                
                 evidence = new Evidence({
                     title: article.title,
                     body: article.content,
@@ -77,6 +85,8 @@ export const getTopicSynthesis = async (topic) => {
                     fetchedAt: new Date()
                 });
                 await evidence.save();
+            } else {
+                console.log('Evidence already exists, skipping');
             }
             articleIds.push(evidence._id);
         }
