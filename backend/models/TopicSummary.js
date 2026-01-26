@@ -81,40 +81,24 @@ topicSummarySchema.index({ topic: 1, createdAt: -1 });
 // TTL index for automatic cleanup of expired summaries
 topicSummarySchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
-// Middleware to update updatedAt timestamp
-topicSummarySchema.pre('save', function(next) {
-    this.updatedAt = Date.now();
-    next();
-});
-
-topicSummarySchema.pre('findOneAndUpdate', function(next) {
-    this.set({ updatedAt: Date.now() });
-    next();
-});
-
 /**
  * Instance method to update summary with new data
  */
-topicSummarySchema.methods.updateSummary = function(summaryText, sourcesUsed, articleData) {
+topicSummarySchema.methods.updateSummary = async function(summaryText, sourcesUsed, articleData) {
     this.summaryText = summaryText;
     this.sourcesUsed = sourcesUsed;
     this.articleData = articleData;
     this.sourceCount = sourcesUsed.length;
     this.wordCount = summaryText.split(/\s+/).length;
     this.updatedAt = new Date();
-    return this.save();
+    return await this.save();
 };
 
 /**
- * Static method to find or create summary for a topic
+ * Static method to find summary for a topic (does not create)
  */
-topicSummarySchema.statics.findOrCreate = async function(topic) {
-    let summary = await this.findOne({ topic });
-    if (!summary) {
-        summary = new this({ topic });
-        await summary.save();
-    }
-    return summary;
+topicSummarySchema.statics.findByTopic = async function(topic) {
+    return await this.findOne({ topic });
 };
 
 const TopicSummary = mongoose.model('TopicSummary', topicSummarySchema);

@@ -12,8 +12,6 @@ export const connectDB = async () => {
         const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/syftlyai';
 
         const conn = await mongoose.connect(mongoURI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
             serverSelectionTimeoutMS: 5000,
             socketTimeoutMS: 45000,
         });

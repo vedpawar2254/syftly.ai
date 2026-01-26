@@ -90,14 +90,19 @@ async function testTopicSummaryModel() {
     await summary.save();
     console.log('✅ TopicSummary created:', summary._id);
 
-    // Test 2: Find or create
-    console.log('\nTest 2: Testing findOrCreate...');
-    const foundSummary = await TopicSummary.findOrCreate('elections');
+    // Test 2: Find by topic
+    console.log('\nTest 2: Testing findByTopic...');
+    const foundSummary = await TopicSummary.findByTopic('elections');
     console.log('✅ Found existing summary:', foundSummary._id.toString() === summary._id.toString());
 
-    // Test 3: Create new summary with findOrCreate
-    console.log('\nTest 3: Creating new summary with findOrCreate...');
-    const newSummary = await TopicSummary.findOrCreate('budget');
+    // Test 3: Create new summary
+    console.log('\nTest 3: Creating new summary...');
+    const newSummary = new TopicSummary({
+      topic: 'budget',
+      summaryText: 'Budget summary text for testing purposes. This is a longer text to meet the minimum length requirement of 50 characters for the summary field.',
+      sourcesUsed: ['The Hindu']
+    });
+    await newSummary.save();
     console.log('✅ New summary created:', newSummary._id);
 
     // Test 4: Test uniqueness constraint
@@ -116,7 +121,7 @@ async function testTopicSummaryModel() {
     // Test 5: Update summary method
     console.log('\nTest 5: Testing updateSummary method...');
     await summary.updateSummary(
-      'Updated summary text with more content for testing purposes. This is an updated summary.',
+      'Updated summary text with more content for testing purposes. This is an updated summary with enough words to pass validation.',
       ['The Hindu', 'Times of India', 'Indian Express'],
       [{ title: 'Test', source: 'The Hindu', url: 'https://test.com' }]
     );

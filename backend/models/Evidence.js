@@ -60,7 +60,7 @@ const evidenceSchema = new mongoose.Schema(
 );
 
 // Indexes for efficient querying
-evidenceSchema.index({ url: 1 }, { unique: true });
+// Note: unique index is already defined in schema field definition
 evidenceSchema.index({ topic: 1, publishDate: -1 });
 
 // Prevent updates - Evidence is immutable
