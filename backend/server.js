@@ -24,7 +24,9 @@ app.use(helmet());
 
 // CORS configuration
 app.use(cors({
-    origin: config.frontendUrl,
+    origin: process.env.NODE_ENV === 'production'
+        ? config.frontendUrl
+        : ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:5174'], // Allow local development ports
     credentials: true
 }));
 

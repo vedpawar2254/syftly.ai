@@ -64,26 +64,17 @@ export const getTopicSynthesis = async (topic) => {
         const articleIds = [];
         for (const article of result.articles) {
             // Try to find existing evidence by URL
-            let evidence = await Evidence.findOne({ 'source.url': article.url });
+            let evidence = await Evidence.findOne({ url: article.url });
             
             if (!evidence) {
                 // Create new evidence
                 evidence = new Evidence({
-                    source: {
-                        type: 'news',
-                        publisher: article.source,
-                        url: article.url
-                    },
-                    observed_at: article.publishDate,
-                    ingested_at: new Date(),
-                    raw_content: {
-                        title: article.title,
-                        body: article.content
-                    },
-                    metadata: {
-                        language: 'en',
-                        region: 'india'
-                    }
+                    title: article.title,
+                    body: article.content,
+                    source: article.source,
+                    url: article.url,
+                    publishDate: article.publishDate,
+                    fetchedAt: new Date()
                 });
                 await evidence.save();
             }
