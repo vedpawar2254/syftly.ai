@@ -64,7 +64,7 @@ function Feed() {
     setLoading(true);
     setError(null);
     setSynthesis(null);
-    setTopic(searchQuery);
+    setSearchQuery(searchQuery);
 
     try {
       const response = await axios.get(`${API_BASE_URL}/feed/topic`, {
