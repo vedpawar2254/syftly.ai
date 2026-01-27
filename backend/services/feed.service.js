@@ -83,7 +83,7 @@ export const getTopicSynthesis = async (topic) => {
                     fetchedAt: new Date()
                 });
                 
-                const newEvidence = new Evidence({
+                evidence = new Evidence({
                     title: article.title,
                     body: article.content,
                     source: article.source,
@@ -91,7 +91,7 @@ export const getTopicSynthesis = async (topic) => {
                     publishDate: article.publishDate,
                     fetchedAt: new Date()
                 });
-                await newEvidence.save();
+                await evidence.save();
                 console.log('Evidence saved successfully');
             } else {
                 console.log('Evidence already exists, skipping');
@@ -102,17 +102,22 @@ export const getTopicSynthesis = async (topic) => {
         // Store the summary in database
         if (result.summary && !result.error && result.summary.length >= 50) {
             const wordCount = result.summary.split(/\s+/).length;
+            const trimmedTopic = result.topic.trim();
             
-            const topicSummary = new TopicSummary({
-                topic: result.topic,
-                summaryText: result.summary,
-                sourcesUsed: result.sources,
-                articleIds,
-                articleData: result.articles,
-                wordCount
-            });
-            
-            await topicSummary.save();
+            // Use findOneAndUpdate with upsert to create or update
+            await TopicSummary.findOneAndUpdate(
+                { topic: trimmedTopic },
+                {
+                    topic: trimmedTopic,
+                    summaryText: result.summary,
+                    sourcesUsed: result.sources,
+                    articleIds,
+                    articleData: result.articles,
+                    wordCount,
+                    updatedAt: new Date()
+                },
+                { upsert: true, new: true }
+            );
         } else if (result.summary && result.summary.length < 50) {
             console.warn(`Summary for topic "${result.topic}" is too short (${result.summary.length} chars), skipping database save`);
         }
