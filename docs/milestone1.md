@@ -8,7 +8,7 @@ This milestone establishes the foundational flow for syftly.ai: enabling users t
 2. **System scrapes multiple Indian news sources** for articles relevant to the topic.
 3. **Synthesis & Summarization**: The system synthesizes all collected articles into ONE unified summary that captures the key points, trends, and perspectives from across sources.
 4. **Situation Feed**: The synthesized summary and supporting articles are displayed in a user-facing feed.
-5. **Follow Topic**: Users can choose to follow a topic for future updates.
+5. **Follow hyperfocused Topic**: Users can choose to follow a topic for future updates.
 
 ## Goals
 - Demonstrate end-to-end flow from user topic input to a populated situation feed.
