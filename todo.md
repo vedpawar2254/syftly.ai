@@ -6,7 +6,8 @@
 - [ ] Feed page
 - [ ] detail page
 - [ ] followed topics page
-- [ ] profile page
+- [ ] profile page 
+    - [ ] user can set how they want to consume the news and the summary is created accordingly ( personalize button )
 - [ ] fix current code
 - [ ] user types a topic and gets a bunch of articles related to that and the summary. the summary is tuned based on users intent
 - [ ] user can follow hyper personalised topics
