@@ -34,12 +34,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. User can create profile with display name, bio, and avatar image
   5. User can set default synthesis preferences (length, format, perspective, complexity) and view/edit their profile
 
-**Plans**: TBD (to be determined during planning)
+**Plans**: 3 plans in 3 waves
 
 Plans:
-- [ ] 01-01: User authentication system with JWT tokens and Better Auth integration
-- [ ] 01-02: Profile management with avatar upload and synthesis preferences
-- [ ] 01-03: Email verification and password reset flows
+- [ ] 01-01-PLAN.md — User authentication system with JWT tokens, bcrypt password hashing, React AuthContext, and Login/Signup forms
+- [ ] 01-02-PLAN.md — Profile management with CRUD operations, avatar upload using Multer, and synthesis preferences storage
+- [ ] 01-03-PLAN.md — Email verification and password reset flows using nodemailer with time-limited secure tokens
 
 ### Phase 2: Intent-Aware Synthesis
 
@@ -118,4 +118,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 ---
 
 *Roadmap created: February 3, 2026*
-*Last updated: February 3, 2026 after initial creation*
+*Last updated: February 3, 2026 after Phase 1 planning*
