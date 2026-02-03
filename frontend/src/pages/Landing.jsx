@@ -513,6 +513,7 @@ function Landing() {
 
     return (
         <div className="relative">
+            <div className="max-w-5xl mx-auto px-6 md:px-8">
             {/* Fixed countdown */}
             <div
                 className="fixed top-6 right-6 z-50 transition-all duration-700"
@@ -1161,6 +1162,7 @@ function Landing() {
                     </div>
                 </div>
             </footer>
+            </div>
         </div>
     );
 }
